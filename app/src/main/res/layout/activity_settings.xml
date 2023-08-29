@@ -19,32 +19,24 @@
             android:contentDescription="@string/back"
             android:padding="12dp"
             android:src="@drawable/arrow_back_mode" />
-
-        <LinearLayout
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingStart="12dp"
-            android:paddingTop="10dp"
-            android:paddingEnd="86dp"
-            android:paddingBottom="12dp">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="12dp"
+            android:text="@string/settings"
+            android:textColor="@color/YPblack"
+            android:textSize="22sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/settings"
-                android:textColor="@color/YPblack"
-                android:textSize="22sp" />
-        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp">
+        android:layout_marginTop="28dp">
         <TextView
             style="@style/TextMenuSettings"
-            android:text="@string/black_theme"
-            />
+            android:text="@string/black_theme" />
         <androidx.appcompat.widget.SwitchCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,10 +51,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             style="@style/TextMenuSettings"
             android:layout_marginVertical="19dp"
             android:text="@string/share_app" />
+
         <ImageView
             style="@style/IconMenuSettings"
             android:src="@drawable/send_mode" />
@@ -72,10 +66,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             style="@style/TextMenuSettings"
             android:layout_marginVertical="19dp"
             android:text="@string/write_to_support" />
+
         <ImageView
             style="@style/IconMenuSettings"
             android:src="@drawable/support_mode" />
@@ -84,12 +80,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             style="@style/TextMenuSettings"
             android:layout_marginVertical="19dp"
             android:text="@string/terms_of_use" />
+
         <ImageView
             style="@style/IconMenuSettings"
-            android:src="@drawable/move_mode"/>
+            android:src="@drawable/move_mode" />
     </LinearLayout>
 </LinearLayout>
