@@ -9,7 +9,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+
 
 class SearchActivity : AppCompatActivity() {
     companion object {
@@ -20,11 +22,10 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val buttonBackToMainFromSearch =
-            findViewById<ImageButton>(R.id.buttonBackToMainFromSearch)
-        buttonBackToMainFromSearch.setOnClickListener {
-            finish()
-        }
+        val toolbarSearch = findViewById<Toolbar>(R.id.toolbarSearchActivity)
+        toolbarSearch.setNavigationIcon(R.drawable.arrow_back_mode)
+        toolbarSearch.setNavigationOnClickListener { finish() }
+        toolbarSearch.setTitleTextAppearance(this,R.style.SecondsActivityMediumTextAppearance)
 
         val inputEditTextSearch = findViewById<EditText>(R.id.inputEditTextSearch)
         val clearTextSearchIcon = findViewById<ImageView>(R.id.clearTextSearchIcon)

@@ -4,19 +4,19 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageButton
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ShareCompat
 
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        val buttonBackToMainFromSettings =
-            findViewById<ImageButton>(R.id.buttonBackToMainFromSettings)
-        buttonBackToMainFromSettings.setOnClickListener {
-            finish()
-        }
+
+        val toolbarSearch = findViewById<Toolbar>(R.id.toolbarSettingsActivity)
+        toolbarSearch.setNavigationIcon(R.drawable.arrow_back_mode)
+        toolbarSearch.setNavigationOnClickListener { finish() }
+        toolbarSearch.setTitleTextAppearance(this,R.style.SecondsActivityMediumTextAppearance)
 
         val buttonShareApplication = findViewById<ImageButton>(R.id.buttonShareApplication)
         buttonShareApplication.setOnClickListener {
@@ -31,25 +31,6 @@ class SettingsActivity : AppCompatActivity() {
 
         val buttonSupport = findViewById<ImageButton>(R.id.buttonSupport)
         buttonSupport.setOnClickListener {
-//            val email = resources.getString(R.string.support_mail)
-//            val subject = resources.getString(R.string.support_subject)
-//            val body = resources.getString(R.string.support_body)
-//            ShareCompat.IntentBuilder.from(this)
-//                .setType("message/rfc822")
-//                .addEmailTo(email)
-//                .setSubject(subject)
-//                .setText(body)
-//                .startChooser()
-
-//            val address = resources.getString(R.string.support_mail)
-//            val subject = resources.getString(R.string.support_subject)
-//            val body = resources.getString(R.string.support_body)
-//            val intent = Intent(Intent.ACTION_SENDTO)
-//            intent.data = Uri.parse("mailto:$address")
-//            //intent.putExtra(Intent.EXTRA_EMAIL, address)
-//            intent.putExtra(Intent.EXTRA_SUBJECT, subject)
-//            intent.putExtra(Intent.EXTRA_TEXT, body)
-//            startActivity(intent)
 
             val email = resources.getString(R.string.support_mail)
             val subject = resources.getString(R.string.support_subject)

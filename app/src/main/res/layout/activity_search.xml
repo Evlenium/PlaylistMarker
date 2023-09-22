@@ -8,60 +8,48 @@
     android:orientation="vertical"
     tools:context=".SearchActivity">
 
-    <LinearLayout
+    <Toolbar
+        android:id="@+id/toolbarSearchActivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="52dp"
-        android:padding="4dp">
-        <ImageButton
-            android:id="@+id/buttonBackToMainFromSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="?attr/background_search_color"
-            android:contentDescription="@string/back"
-            android:padding="12dp"
-            android:src="@drawable/arrow_back_mode" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="12dp"
-            android:fontFamily="@font/ys_display_medium"
-            android:text="@string/search"
-            android:textColor="?attr/title_search_color"
-            android:textFontWeight="500"
-            android:textSize="22sp" />
-    </LinearLayout>
+        android:collapseIcon="@drawable/arrow_back_mode"
+        android:padding="4dp"
+        android:title="@string/search">
+    </Toolbar>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="8dp"
-        android:layout_marginHorizontal="16dp">
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp">
 
         <EditText
             android:id="@+id/inputEditTextSearch"
-            android:paddingStart="14dp"
-            android:drawableStart="@drawable/search_mode_search_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="40dp"
-            android:hint="@string/search"
+            android:background="@drawable/rounded_edit_text"
+            android:drawableStart="@drawable/search_mode_search_menu"
             android:fontFamily="@font/ys_display_regular"
-            android:textFontWeight="400"
-            android:textColorHint="?attr/icon_search_color"
-            android:textColor="?attr/text_search_color"
+            android:hint="@string/search"
             android:inputType="text"
             android:lines="1"
-            android:textSize="16sp"
-            android:textCursorDrawable="?attr/cursor_search_color"
-            android:background="@drawable/rounded_edit_text" />
+            android:minHeight="40dp"
+            android:drawablePadding="8dp"
+            android:paddingStart="12dp"
+            android:textColor="?attr/text_search_color"
+            android:textColorHint="?attr/icon_search_color"
+            android:textCursorDrawable="@drawable/text_cursor"
+            android:textFontWeight="400"
+            android:textSize="16sp" />
         <ImageView
+
             android:id="@+id/clearTextSearchIcon"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:visibility="gone"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/clear"/>
+            <!--android:visibility="gone"--> />
     </FrameLayout>
 </LinearLayout>
