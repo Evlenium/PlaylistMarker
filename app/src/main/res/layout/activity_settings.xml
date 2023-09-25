@@ -10,7 +10,6 @@
         android:id="@+id/toolbarSettingsActivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="52dp"
         android:collapseIcon="@drawable/arrow_back_mode"
         android:padding="4dp"
         android:title="@string/settings">
