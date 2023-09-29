@@ -22,6 +22,8 @@
         <item name="cursor_search_color">@color/YPblue</item>
         <item name="icon_search_color">@color/YPblack</item>
         <item name="editor_search_color">@color/YPwhite</item>
+        <item name="composition_name_search_color">@color/YPwhite</item>
+        <item name="compositor_name_search_color">@color/YPwhite</item>
     </style>
 
     <!-- Base style main. -->

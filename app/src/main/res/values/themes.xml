@@ -22,6 +22,8 @@
     <attr name="cursor_search_color" />
     <attr name="icon_search_color"/>
     <attr name="editor_search_color"/>
+    <attr name="composition_name_search_color"/>
+    <attr name="compositor_name_search_color"/>
 
     <!-- Base application theme. -->
     <style name="Base.Theme.PlaylistMarker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -41,10 +43,12 @@
         <!-- Search menu. -->
         <item name="background_search_color">@color/YPwhite</item>
         <item name="title_search_color">@color/YPblack</item>
-        <item name="text_search_color">@color/YPtextgray</item>
+        <item name="text_search_color">@color/YPblack</item>
         <item name="cursor_search_color">@color/YPblue</item>
         <item name="icon_search_color">@color/YPtextgray</item>
         <item name="editor_search_color">@color/YPlightgray</item>
+        <item name="composition_name_search_color">@color/YPblack</item>
+        <item name="compositor_name_search_color">@color/YPtextgray</item>
     </style>
 
     <!-- Base style main. -->
