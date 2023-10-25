@@ -2,18 +2,12 @@ package com.practicum.playlistmarker
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toolbar
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import okhttp3.OkHttpClient
@@ -25,8 +19,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
-    companion object {
-        const val INPUT_TEXT_SEARCH = "INPUT_TEXT_SEARCH"
+    enum class SearchError {
+        INTERNET_CONNECTION_ERROR,
+        EMPTY_SEARCH_ERROR
     }
 
     private val iTunesSearchBaseUrl = "https://itunes.apple.com"
@@ -48,8 +43,7 @@ class SearchActivity : AppCompatActivity() {
 
     private val tracks = ArrayList<Track>()
 
-    lateinit
-    var inputTextFromSearch: String
+    private var inputTextFromSearch: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -118,26 +112,40 @@ class SearchActivity : AppCompatActivity() {
                             response: Response<TracksResponse>,
                         ) {
                             if (response.code() == 200) {
+                                phLayoutError.visibility = View.GONE
+                                bUpdateSearch.visibility = View.GONE
                                 tracks.clear()
+                                trackAdapter.setUpTracks(tracks)
                                 if (response.body()?.results?.isNotEmpty() == true) {
                                     tracks.addAll(response.body()?.results!!)
                                     trackAdapter.setUpTracks(tracks)
                                 } else {
-                                    bindErrors(getString(R.string.nothing_found), bUpdateSearch,phLayoutError)
+                                    bindErrors(
+                                        SearchError.EMPTY_SEARCH_ERROR,
+                                        bUpdateSearch,
+                                        phLayoutError
+                                    )
                                 }
                             } else {
                                 bindErrors(
-                                    getString(R.string.error_internet_connection), bUpdateSearch,phLayoutError
+                                    SearchError.INTERNET_CONNECTION_ERROR,
+                                    bUpdateSearch,
+                                    phLayoutError
                                 )
                             }
                         }
 
                         override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
-                            bindErrors(getString(R.string.error_internet_connection), bUpdateSearch,phLayoutError)
+                            bindErrors(
+                                SearchError.INTERNET_CONNECTION_ERROR,
+                                bUpdateSearch,
+                                phLayoutError
+                            )
                         }
                     })
             } else {
                 tracks.clear()
+                trackAdapter.setUpTracks(tracks)
             }
         }
         inputEditTextSearch.setOnEditorActionListener { _, actionId, _ ->
@@ -150,19 +158,19 @@ class SearchActivity : AppCompatActivity() {
         bUpdateSearch.setOnClickListener { trackSearch() }
     }
 
-    private fun bindErrors(error: String, bUpdateSearch: View,phLayoutError:View) {
+    private fun bindErrors(error: SearchError, bUpdateSearch: View, phLayoutError: View) {
         tracks.clear()
         val tvErrorSearch = findViewById<TextView>(R.id.tvErrorSearch)
         val ivErrorConnection = findViewById<ImageView>(R.id.ivErrorConnection)
 
         when (error) {
-            getString(R.string.error_internet_connection) -> {
+            SearchError.INTERNET_CONNECTION_ERROR -> {
                 phLayoutError.visibility = View.VISIBLE
                 tvErrorSearch.text = getString(R.string.error_internet_connection)
                 ivErrorConnection.setImageResource(R.drawable.internet_error)
                 bUpdateSearch.visibility = View.VISIBLE
             }
-            getString(R.string.nothing_found) -> {
+            SearchError.EMPTY_SEARCH_ERROR -> {
                 phLayoutError.visibility = View.VISIBLE
                 tvErrorSearch.text = getString(R.string.nothing_found)
                 ivErrorConnection.setImageResource(R.drawable.nothing_found)
@@ -187,5 +195,9 @@ class SearchActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         inputTextFromSearch = savedInstanceState.getString(INPUT_TEXT_SEARCH, "")
+    }
+
+    companion object {
+        const val INPUT_TEXT_SEARCH = "INPUT_TEXT_SEARCH"
     }
 }

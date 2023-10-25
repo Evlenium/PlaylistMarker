@@ -2,4 +2,5 @@
 <resources>
     <dimen name="buttonMainCornerRadius">16dp</dimen>
     <dimen name="buttonMainIconPadding">8dp</dimen>
+    <dimen name="standartIndentationActivitySearch">16dp</dimen>
 </resources>
