@@ -10,13 +10,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
+import com.practicum.playlistmarker.App.Companion.PRACTICUM_PLAYLISTMARKER_PREFERENCES
+import com.practicum.playlistmarker.App.Companion.TRACKS_LIST_KEY
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
     enum class SearchError {
@@ -24,32 +22,18 @@ class SearchActivity : AppCompatActivity() {
         EMPTY_SEARCH_ERROR
     }
 
-    private val iTunesSearchBaseUrl = "https://itunes.apple.com"
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(iTunesSearchBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(
-            OkHttpClient.Builder()
-                .addInterceptor(
-                    HttpLoggingInterceptor()
-                        .setLevel(HttpLoggingInterceptor.Level.BODY)
-                )
-                .build()
-        )
-        .build()
-
-    private
-    val iTunesService = retrofit.create(iTunesApi::class.java)
-
-    private val tracks = ArrayList<Track>()
-
+    private val trackList = ArrayList<Track>()
+    private val searchHistory = SearchHistory()
     private var inputTextFromSearch: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val trackAdapter = TrackAdapter(ArrayList())
-        val rvTrack: RecyclerView = findViewById(R.id.rv_tracks)
+        val trackAdapter = TrackAdapter(ArrayList()) {
+            searchHistory.saveTrack(it)
+        }
+        val rvTrack: RecyclerView = findViewById(R.id.rvTracks)
         rvTrack.adapter = trackAdapter
 
         val inputEditTextSearch = findViewById<EditText>(R.id.inputEditTextSearch)
@@ -57,6 +41,37 @@ class SearchActivity : AppCompatActivity() {
 
         val phLayoutError = findViewById<LinearLayout>(R.id.phLayoutError)
         val bUpdateSearch = findViewById<Button>(R.id.bUpdateSearch)
+        val bClearHistory = findViewById<Button>(R.id.bClearHistory)
+        val tvYouSearched = findViewById<TextView>(R.id.tvYouSearched)
+
+        fun hideMenuHistory() {
+            bClearHistory.visibility = View.GONE
+            tvYouSearched.visibility = View.GONE
+        }
+
+        val sharedPreferences =
+            getSharedPreferences(PRACTICUM_PLAYLISTMARKER_PREFERENCES, MODE_PRIVATE)
+        //sharedPreferences.edit().clear().apply()
+        bClearHistory.setOnClickListener {
+            sharedPreferences.edit().clear().apply()
+            searchHistory.clearHistory()
+            trackAdapter.setUpTracks(searchHistory.getSavedTracks())
+            hideMenuHistory()
+        }
+
+        val tracks = sharedPreferences.getString(TRACKS_LIST_KEY, null)
+        if (tracks != null) {
+//            rvTrack.visibility = View.VISIBLE
+//            bClearHistory.visibility = View.VISIBLE
+//            tvYouSearched.visibility = View.VISIBLE
+            searchHistory.tracksBufferSaved =
+                searchHistory.createTrackFromJson(tracks).toMutableList()
+            searchHistory.tracksBufferSaved.reverse()
+            trackAdapter.setUpTracks(searchHistory.getSavedTracks())
+            if (searchHistory.getSavedTracks().isEmpty()) {
+                hideMenuHistory()
+            }
+        }
 
         toolbarSearch.setNavigationIcon(R.drawable.arrow_back_mode)
         toolbarSearch.setNavigationOnClickListener { finish() }
@@ -73,6 +88,7 @@ class SearchActivity : AppCompatActivity() {
                     getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                 imm?.hideSoftInputFromWindow(view.windowToken, 0)
                 phLayoutError.visibility = View.GONE
+                hideMenuHistory()
             }
         }
 
@@ -91,11 +107,17 @@ class SearchActivity : AppCompatActivity() {
                 before: Int,
                 count: Int,
             ) {
+                clearTextSearchIcon.visibility = clearButtonVisibility(s)
+                rvTrack.visibility = clearButtonVisibility(s)
+                bClearHistory.visibility =
+                    if (inputEditTextSearch.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
+                tvYouSearched.visibility =
+                    if (inputEditTextSearch.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
+                rvTrack.visibility =
+                    if (inputEditTextSearch.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
                 if (s != null) {
                     inputTextFromSearch = s.toString()
                 }
-                clearTextSearchIcon.visibility = clearButtonVisibility(s)
-                rvTrack.visibility = clearButtonVisibility(s)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -104,6 +126,7 @@ class SearchActivity : AppCompatActivity() {
         inputEditTextSearch.addTextChangedListener(searchTextWatcher)
 
         fun trackSearch() {
+            hideMenuHistory()
             if (inputEditTextSearch.text.isNotEmpty()) {
                 iTunesService.search(inputEditTextSearch.text.toString())
                     .enqueue(object : Callback<TracksResponse> {
@@ -112,14 +135,15 @@ class SearchActivity : AppCompatActivity() {
                             response: Response<TracksResponse>,
                         ) {
                             if (response.code() == 200) {
-                                phLayoutError.visibility = View.GONE
-                                bUpdateSearch.visibility = View.GONE
-                                tracks.clear()
-                                trackAdapter.setUpTracks(tracks)
+                                hideMenuHistory()
+                                rvTrack.visibility = View.VISIBLE
+                                trackList.clear()
+                                trackAdapter.setUpTracks(trackList)
                                 if (response.body()?.results?.isNotEmpty() == true) {
-                                    tracks.addAll(response.body()?.results!!)
-                                    trackAdapter.setUpTracks(tracks)
+                                    trackList.addAll(response.body()?.results!!)
+                                    trackAdapter.setUpTracks(trackList)
                                 } else {
+                                    hideMenuHistory()
                                     bindErrors(
                                         SearchError.EMPTY_SEARCH_ERROR,
                                         bUpdateSearch,
@@ -127,6 +151,7 @@ class SearchActivity : AppCompatActivity() {
                                     )
                                 }
                             } else {
+                                hideMenuHistory()
                                 bindErrors(
                                     SearchError.INTERNET_CONNECTION_ERROR,
                                     bUpdateSearch,
@@ -136,6 +161,7 @@ class SearchActivity : AppCompatActivity() {
                         }
 
                         override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                            hideMenuHistory()
                             bindErrors(
                                 SearchError.INTERNET_CONNECTION_ERROR,
                                 bUpdateSearch,
@@ -144,22 +170,47 @@ class SearchActivity : AppCompatActivity() {
                         }
                     })
             } else {
-                tracks.clear()
-                trackAdapter.setUpTracks(tracks)
+                trackList.clear()
             }
         }
+
         inputEditTextSearch.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
+            if (actionId == EditorInfo.IME_ACTION_DONE && inputEditTextSearch.text.isNotEmpty()) {
                 trackSearch()
                 true
             }
             false
         }
         bUpdateSearch.setOnClickListener { trackSearch() }
+
+        inputEditTextSearch.setOnFocusChangeListener { view, hasFocus ->
+            bClearHistory.visibility =
+                if (hasFocus && inputEditTextSearch.text.isEmpty() && searchHistory.getSavedTracks()
+                        .isNotEmpty()
+                ) View.VISIBLE else View.GONE
+            tvYouSearched.visibility =
+                if (hasFocus && inputEditTextSearch.text.isEmpty() && searchHistory.getSavedTracks()
+                        .isNotEmpty()
+                ) View.VISIBLE else View.GONE
+            rvTrack.visibility =
+                if (hasFocus && inputEditTextSearch.text.isEmpty()) View.VISIBLE else View.GONE
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val sharedPreferences =
+            getSharedPreferences(PRACTICUM_PLAYLISTMARKER_PREFERENCES, MODE_PRIVATE)
+        sharedPreferences.edit()
+            .putString(
+                TRACKS_LIST_KEY,
+                searchHistory.createJsonFromTracksList(searchHistory.getSavedTracks() as ArrayList<Track>)
+            )
+            .apply()
     }
 
     private fun bindErrors(error: SearchError, bUpdateSearch: View, phLayoutError: View) {
-        tracks.clear()
+        trackList.clear()
         val tvErrorSearch = findViewById<TextView>(R.id.tvErrorSearch)
         val ivErrorConnection = findViewById<ImageView>(R.id.ivErrorConnection)
 

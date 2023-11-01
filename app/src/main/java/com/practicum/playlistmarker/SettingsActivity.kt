@@ -6,17 +6,21 @@ import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
-
+import androidx.appcompat.widget.SwitchCompat
+import com.practicum.playlistmarker.App.Companion.EDIT_THEME
+import com.practicum.playlistmarker.App.Companion.PRACTICUM_PLAYLISTMARKER_PREFERENCES
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
+        val sharedPrefs = getSharedPreferences(PRACTICUM_PLAYLISTMARKER_PREFERENCES, MODE_PRIVATE)
+
         val toolbarSearch = findViewById<Toolbar>(R.id.toolbarSettingsActivity)
         toolbarSearch.setNavigationIcon(R.drawable.arrow_back_mode)
         toolbarSearch.setNavigationOnClickListener { finish() }
-        toolbarSearch.setTitleTextAppearance(this,R.style.SecondsActivityMediumTextAppearance)
+        toolbarSearch.setTitleTextAppearance(this, R.style.SecondsActivityMediumTextAppearance)
 
         val buttonShareApplication = findViewById<ImageButton>(R.id.buttonShareApplication)
         buttonShareApplication.setOnClickListener {
@@ -37,18 +41,29 @@ class SettingsActivity : AppCompatActivity() {
             val body = resources.getString(R.string.support_body)
             val uri: Uri = Uri.parse("mailto:")
                 .buildUpon()
-                .appendQueryParameter("to",email)
-                .appendQueryParameter("subject",subject)
+                .appendQueryParameter("to", email)
+                .appendQueryParameter("subject", subject)
                 .appendQueryParameter("body", body)
                 .build()
-            val emailIntent = Intent(Intent.ACTION_SENDTO,uri)
-            startActivity(Intent.createChooser(emailIntent,"subject"))
+            val emailIntent = Intent(Intent.ACTION_SENDTO, uri)
+            startActivity(Intent.createChooser(emailIntent, "subject"))
         }
 
         val buttonTermsOfUse = findViewById<ImageButton>(R.id.buttonTermsOfUse)
         buttonTermsOfUse.setOnClickListener {
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.YP_offer_url)))
+            val browserIntent =
+                Intent(Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.YP_offer_url)))
             startActivity(browserIntent)
         }
+
+        var isChecked = false
+        val themeSwitcher = findViewById<SwitchCompat>(R.id.swTheme)
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            isChecked = checked
+            (applicationContext as App).switchTheme(checked)
+            sharedPrefs.edit().putBoolean(EDIT_THEME, checked).apply()
+        }
+        themeSwitcher.isChecked = sharedPrefs.getBoolean(EDIT_THEME,(applicationContext as App).darkTheme )
+        (applicationContext as App).switchTheme(isChecked)
     }
 }

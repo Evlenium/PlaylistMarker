@@ -18,6 +18,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val tvLengthComposition: TextView = itemView.findViewById(R.id.tv_length_composition)
     private val icTrack: ImageView = itemView.findViewById(R.id.icon_track)
 
+
     fun bind(item: Track) {
         tvNameComposition.text = item.trackName
         tvNameCompositor.text = item.artistName

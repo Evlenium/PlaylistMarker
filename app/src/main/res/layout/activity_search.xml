@@ -57,17 +57,42 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_tracks"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/standartIndentationActivitySearch"
-            android:orientation="vertical"
-            android:visibility="gone"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/track_item" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvYouSearched"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/ys_display_medium"
+                android:paddingTop="18dp"
+                android:paddingBottom="4dp"
+                android:text="@string/you_searched"
+                android:textColor="?attr/title_search_color"
+                android:textFontWeight="500"
+                android:textSize="19sp"
+                android:visibility="gone" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTracks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/standartIndentationActivitySearch"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/track_item" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/bClearHistory"
+                style="@style/AdditionalButtonSearch"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/standartIndentationActivitySearch"
+                android:text="@string/clear_history"
+                android:visibility="gone" />
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/phLayoutError"
             android:layout_width="wrap_content"
@@ -100,20 +125,9 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/bUpdateSearch"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                style="@style/AdditionalButtonSearch"
                 android:layout_gravity="center"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/bt_update_corner"
-                android:fontFamily="@font/ys_display_medium"
-                android:paddingStart="8dp"
-                android:paddingEnd="6dp"
-                android:text="@string/update"
-                android:textAllCaps="false"
-                android:textColor="?attr/background_search_color"
-                android:textFontWeight="500"
-                android:textSize="14sp" />
+                android:text="@string/update" />
         </LinearLayout>
     </FrameLayout>
-
 </LinearLayout>

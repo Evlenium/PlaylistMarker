@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="ButtonMainMenuStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -13,6 +14,7 @@
         <item name="android:backgroundTint">?attr/button_main_menu_color</item>
         <item name="android:textColor">?attr/text_button_main_menu_color</item>
     </style>
+
     <style name="TextMenuSettings">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -24,6 +26,7 @@
         <item name="android:fontWeight">400</item>
         <item name="android:textColor">?attr/text_settings_color</item>
     </style>
+
     <style name="IconMenuSettings">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -31,10 +34,25 @@
         <item name="android:layout_marginRight">12dp</item>
         <item name="android:background">?attr/background_settings_color</item>
     </style>
+
     <style name="SecondsActivityMediumTextAppearance">
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textColor">?attr/title_search_color</item>
         <item name="android:fontWeight">500</item>
         <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="AdditionalButtonSearch">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">6dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:background">@drawable/bt_update_corner</item>
+        <item name="android:textColor">?attr/background_search_color</item>
+        <item name="android:fontWeight">500</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">14sp</item>
     </style>
 </resources>
