@@ -10,8 +10,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.practicum.playlistmarker.App.Companion.PRACTICUM_PLAYLISTMARKER_PREFERENCES
+import com.practicum.playlistmarker.App.Companion.PRACTICUM_PLAYLISTMARKER_PREFERENCES_TRACKLIST
 import com.practicum.playlistmarker.App.Companion.TRACKS_LIST_KEY
+import com.practicum.playlistmarker.TrackAdapter.TrackClickListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,7 +23,7 @@ class SearchActivity : AppCompatActivity() {
         EMPTY_SEARCH_ERROR
     }
 
-    private val trackList = ArrayList<Track>()
+    private val trackList = ArrayList<TrackSearchItem.Track>()
     private val searchHistory = SearchHistory()
     private var inputTextFromSearch: String? = null
 
@@ -30,10 +31,30 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val trackAdapter = TrackAdapter(ArrayList()) {
+        val rvTrack: RecyclerView = findViewById(R.id.rvTracks)
+        val tvYouSearched = findViewById<TextView>(R.id.tvYouSearched)
+        val sharedPreferences =
+            getSharedPreferences(PRACTICUM_PLAYLISTMARKER_PREFERENCES_TRACKLIST, MODE_PRIVATE)
+
+        val trackClickListener = TrackClickListener {
             searchHistory.saveTrack(it)
         }
-        val rvTrack: RecyclerView = findViewById(R.id.rvTracks)
+
+        fun hideMenuHistory() {
+            rvTrack.visibility = View.GONE
+            tvYouSearched.visibility = View.GONE
+        }
+
+        var trackAdapter = TrackAdapter(mutableListOf())
+        val buttonClickListener = TrackAdapter.ButtonClickListener {
+            sharedPreferences.edit().clear().apply()
+            searchHistory.clearHistory()
+            trackAdapter.setUpTracks(searchHistory.tracksBufferSaved as ArrayList<TrackSearchItem.Track>)
+            hideMenuHistory()
+        }
+
+        trackAdapter = TrackAdapter(mutableListOf(), trackClickListener, buttonClickListener)
+
         rvTrack.adapter = trackAdapter
 
         val inputEditTextSearch = findViewById<EditText>(R.id.inputEditTextSearch)
@@ -41,23 +62,6 @@ class SearchActivity : AppCompatActivity() {
 
         val phLayoutError = findViewById<LinearLayout>(R.id.phLayoutError)
         val bUpdateSearch = findViewById<Button>(R.id.bUpdateSearch)
-        val bClearHistory = findViewById<Button>(R.id.bClearHistory)
-        val tvYouSearched = findViewById<TextView>(R.id.tvYouSearched)
-
-        fun hideMenuHistory() {
-            bClearHistory.visibility = View.GONE
-            tvYouSearched.visibility = View.GONE
-        }
-
-        val sharedPreferences =
-            getSharedPreferences(PRACTICUM_PLAYLISTMARKER_PREFERENCES, MODE_PRIVATE)
-        //sharedPreferences.edit().clear().apply()
-        bClearHistory.setOnClickListener {
-            sharedPreferences.edit().clear().apply()
-            searchHistory.clearHistory()
-            trackAdapter.setUpTracks(searchHistory.getSavedTracks())
-            hideMenuHistory()
-        }
 
         val tracks = sharedPreferences.getString(TRACKS_LIST_KEY, null)
         if (tracks != null) {
@@ -66,8 +70,7 @@ class SearchActivity : AppCompatActivity() {
 //            tvYouSearched.visibility = View.VISIBLE
             searchHistory.tracksBufferSaved =
                 searchHistory.createTrackFromJson(tracks).toMutableList()
-            searchHistory.tracksBufferSaved.reverse()
-            trackAdapter.setUpTracks(searchHistory.getSavedTracks())
+            trackAdapter.setUpTracks(searchHistory.getSavedTracks() as ArrayList<TrackSearchItem.Track>)
             if (searchHistory.getSavedTracks().isEmpty()) {
                 hideMenuHistory()
             }
@@ -109,8 +112,6 @@ class SearchActivity : AppCompatActivity() {
             ) {
                 clearTextSearchIcon.visibility = clearButtonVisibility(s)
                 rvTrack.visibility = clearButtonVisibility(s)
-                bClearHistory.visibility =
-                    if (inputEditTextSearch.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
                 tvYouSearched.visibility =
                     if (inputEditTextSearch.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
                 rvTrack.visibility =
@@ -135,6 +136,8 @@ class SearchActivity : AppCompatActivity() {
                             response: Response<TracksResponse>,
                         ) {
                             if (response.code() == 200) {
+                                phLayoutError.visibility = View.GONE
+                                bUpdateSearch.visibility = View.GONE
                                 hideMenuHistory()
                                 rvTrack.visibility = View.VISIBLE
                                 trackList.clear()
@@ -184,12 +187,8 @@ class SearchActivity : AppCompatActivity() {
         bUpdateSearch.setOnClickListener { trackSearch() }
 
         inputEditTextSearch.setOnFocusChangeListener { view, hasFocus ->
-            bClearHistory.visibility =
-                if (hasFocus && inputEditTextSearch.text.isEmpty() && searchHistory.getSavedTracks()
-                        .isNotEmpty()
-                ) View.VISIBLE else View.GONE
             tvYouSearched.visibility =
-                if (hasFocus && inputEditTextSearch.text.isEmpty() && searchHistory.getSavedTracks()
+                if (hasFocus && inputEditTextSearch.text.isEmpty() && searchHistory.tracksBufferSaved
                         .isNotEmpty()
                 ) View.VISIBLE else View.GONE
             rvTrack.visibility =
@@ -200,11 +199,11 @@ class SearchActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         val sharedPreferences =
-            getSharedPreferences(PRACTICUM_PLAYLISTMARKER_PREFERENCES, MODE_PRIVATE)
+            getSharedPreferences(PRACTICUM_PLAYLISTMARKER_PREFERENCES_TRACKLIST, MODE_PRIVATE)
         sharedPreferences.edit()
             .putString(
                 TRACKS_LIST_KEY,
-                searchHistory.createJsonFromTracksList(searchHistory.getSavedTracks() as ArrayList<Track>)
+                searchHistory.createJsonFromTracksList(searchHistory.tracksBufferSaved as ArrayList<TrackSearchItem.Track>)
             )
             .apply()
     }

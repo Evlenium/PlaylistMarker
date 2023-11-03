@@ -8,14 +8,15 @@ import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.practicum.playlistmarker.App.Companion.EDIT_THEME
-import com.practicum.playlistmarker.App.Companion.PRACTICUM_PLAYLISTMARKER_PREFERENCES
+import com.practicum.playlistmarker.App.Companion.PRACTICUM_PLAYLISTMARKER_PREFERENCES_THEME
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val sharedPrefs = getSharedPreferences(PRACTICUM_PLAYLISTMARKER_PREFERENCES, MODE_PRIVATE)
+        val sharedPrefs =
+            getSharedPreferences(PRACTICUM_PLAYLISTMARKER_PREFERENCES_THEME, MODE_PRIVATE)
 
         val toolbarSearch = findViewById<Toolbar>(R.id.toolbarSettingsActivity)
         toolbarSearch.setNavigationIcon(R.drawable.arrow_back_mode)
@@ -63,7 +64,8 @@ class SettingsActivity : AppCompatActivity() {
             (applicationContext as App).switchTheme(checked)
             sharedPrefs.edit().putBoolean(EDIT_THEME, checked).apply()
         }
-        themeSwitcher.isChecked = sharedPrefs.getBoolean(EDIT_THEME,(applicationContext as App).darkTheme )
+        themeSwitcher.isChecked =
+            sharedPrefs.getBoolean(EDIT_THEME, (applicationContext as App).darkTheme)
         (applicationContext as App).switchTheme(isChecked)
     }
 }

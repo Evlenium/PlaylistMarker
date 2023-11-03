@@ -7,7 +7,7 @@ class App:Application() {
     var darkTheme = false
     override fun onCreate() {
         val sharedPreferences =
-            getSharedPreferences(PRACTICUM_PLAYLISTMARKER_PREFERENCES, MODE_PRIVATE)
+            getSharedPreferences(PRACTICUM_PLAYLISTMARKER_PREFERENCES_THEME, MODE_PRIVATE)
         (applicationContext as App).switchTheme(
             sharedPreferences.getBoolean(
                 EDIT_THEME,
@@ -27,7 +27,8 @@ class App:Application() {
         )
     }
     companion object{
-        const val PRACTICUM_PLAYLISTMARKER_PREFERENCES = "practicum_theme_preferences"
+        const val PRACTICUM_PLAYLISTMARKER_PREFERENCES_TRACKLIST = "practicum_theme_preferences"
+        const val PRACTICUM_PLAYLISTMARKER_PREFERENCES_THEME = "practicum_theme_preferences_theme"
         const val EDIT_THEME = "key_for_edit_theme"
         const val TRACKS_LIST_KEY = "key_for_tracks_list"
     }
