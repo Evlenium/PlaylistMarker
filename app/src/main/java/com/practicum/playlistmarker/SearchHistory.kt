@@ -26,13 +26,8 @@ class SearchHistory {
         val trackIterator = tracksBufferSaved.iterator()
         while (trackIterator.hasNext()) {
             val track = trackIterator.next()
-            if (item.trackId == track.trackId) {
+            if (item.trackId == track.trackId||tracksBufferSaved.size > 10) {
                 trackIterator.remove()
-            }
-            if (tracksBufferSaved.size >= 10) {
-                tracksBufferSaved.removeAt(0)
-                tracksBufferSaved.add(tracksBufferSaved.size, item)
-                return
             }
         }
         tracksBufferSaved.add(item)
