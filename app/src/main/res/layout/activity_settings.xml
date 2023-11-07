@@ -23,6 +23,7 @@
             style="@style/TextMenuSettings"
             android:text="@string/black_theme" />
         <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/swTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="11dp"
