@@ -11,8 +11,8 @@
     <attr name="background_settings_color" />
     <attr name="title_settings_color" />
     <attr name="icons_settings_color" />
-    <attr name="switcher_settings_color"/>
-    <attr name="switcher_settings_color_background"/>
+    <attr name="switcher_settings_color" />
+    <attr name="switcher_settings_color_background" />
     <attr name="text_settings_color" />
 
     <!-- Base attributes search. -->
@@ -20,10 +20,18 @@
     <attr name="title_search_color" />
     <attr name="text_search_color" />
     <attr name="cursor_search_color" />
-    <attr name="icon_search_color"/>
-    <attr name="editor_search_color"/>
-    <attr name="composition_name_search_color"/>
-    <attr name="compositor_name_search_color"/>
+    <attr name="icon_search_color" />
+    <attr name="editor_search_color" />
+    <attr name="composition_name_search_color" />
+    <attr name="compositor_name_search_color" />
+
+    <!-- Base attributes media library. -->
+    <attr name="background_media_color" />
+    <attr name="text_media_color" />
+    <attr name="icon_like_color" />
+    <attr name="icon_color" />
+    <attr name="text_media_grey_color" />
+    <attr name="text_media_grey_color_icon" />
 
     <!-- Base application theme. -->
     <style name="Base.Theme.PlaylistMarker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -49,6 +57,13 @@
         <item name="editor_search_color">@color/YPlightgray</item>
         <item name="composition_name_search_color">@color/YPblack</item>
         <item name="compositor_name_search_color">@color/YPtextgray</item>
+        <!-- Base attributes media library. -->
+        <item name="background_media_color">@color/YPwhite</item>
+        <item name="text_media_color">@color/YPblack</item>
+        <item name="icon_like_color">@color/YPRed</item>
+        <item name="icon_color">@color/YPwhite</item>
+        <item name="text_media_grey_color">@color/YPtextgray</item>
+        <item name="text_media_grey_color_icon">@color/YPGreyIcon</item>
     </style>
 
     <!-- Base style main. -->

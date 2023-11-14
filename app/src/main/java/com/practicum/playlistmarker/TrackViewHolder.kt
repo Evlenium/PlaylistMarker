@@ -27,7 +27,8 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageUrl = URL(item.artworkUrl100)
         Glide.with(icTrack)
             .load(imageUrl)
-            .placeholder(R.drawable.placeholder)
+            .centerCrop()
+            .placeholder(R.drawable.empty_track_image)
             .transform(RoundedCorners(dpToPx(2)))
             .into(icTrack)
     }
