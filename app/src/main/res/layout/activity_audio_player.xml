@@ -31,27 +31,37 @@
 
     <TextView
         android:id="@+id/tvTrackName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_item_parent_audio_player"
         android:layout_marginBottom="12dp"
+        android:ellipsize="end"
         android:fontFamily="@font/ys_display_medium"
         android:fontWeight="400"
+        android:gravity="start"
+        android:singleLine="true"
         android:textColor="?attr/text_media_color"
         android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/tvNameArtist"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/btAddPlaylist"
         tools:text="Название трека" />
 
     <TextView
         android:id="@+id/tvNameArtist"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_item_parent_audio_player"
         android:layout_marginBottom="30dp"
+        android:ellipsize="end"
         android:fontFamily="@font/ys_display_medium"
         android:fontWeight="400"
+        android:singleLine="true"
         android:textColor="?attr/text_media_color"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/btPlay"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tvTrackName"
         tools:text="Название группы" />
 
@@ -94,12 +104,12 @@
         android:layout_marginBottom="30dp"
         android:fontFamily="@font/ys_display_medium"
         android:fontWeight="500"
+        android:text="@string/fixed_time_track"
         android:textColor="?attr/text_media_color"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/tvConstLength"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="@string/fixed_time_track" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/tvConstLength"
@@ -172,11 +182,15 @@
     <TextView
         android:id="@+id/tvAlbum"
         style="@style/TextAttributeMediaLibrary"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
         android:gravity="end"
+        android:singleLine="true"
         app:layout_constraintBottom_toBottomOf="@+id/tvConstAlbum"
         app:layout_constraintEnd_toEndOf="@+id/tvLength"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/tvConstLength"
         app:layout_constraintTop_toTopOf="@+id/tvConstAlbum"
         tools:text="Yesterday (Remastered 2009)" />
 
