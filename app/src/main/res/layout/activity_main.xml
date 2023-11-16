@@ -26,10 +26,10 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="4dp"
         android:text="@string/search"
-        app:cornerRadius="@dimen/buttonMainCornerRadius"
+        app:cornerRadius="@dimen/button_main_corner_radius"
         app:icon="@drawable/search_mode"
         app:iconGravity="textStart"
-        app:iconPadding="@dimen/buttonMainIconPadding"
+        app:iconPadding="@dimen/button_main_icon_padding"
         app:iconTint="?attr/icons_main_menu_color" />
 
     <Button
@@ -37,10 +37,10 @@
         style="@style/ButtonMainMenuStyle"
         android:layout_marginVertical="4dp"
         android:text="@string/media"
-        app:cornerRadius="@dimen/buttonMainCornerRadius"
+        app:cornerRadius="@dimen/button_main_corner_radius"
         app:icon="@drawable/light_mode"
         app:iconGravity="textStart"
-        app:iconPadding="@dimen/buttonMainIconPadding"
+        app:iconPadding="@dimen/button_main_icon_padding"
         app:iconTint="?attr/icons_main_menu_color" />
 
     <Button
@@ -49,9 +49,9 @@
         android:layout_marginTop="4dp"
         android:layout_marginBottom="28dp"
         android:text="@string/settings"
-        app:cornerRadius="@dimen/buttonMainCornerRadius"
-        app:icon="@drawable/settings"
+        app:cornerRadius="@dimen/button_main_corner_radius"
+        app:icon="@drawable/bt_settings"
         app:iconGravity="textStart"
-        app:iconPadding="@dimen/buttonMainIconPadding"
+        app:iconPadding="@dimen/button_main_icon_padding"
         app:iconTint="?attr/icons_main_menu_color" />
 </LinearLayout>

@@ -10,7 +10,7 @@
         android:id="@+id/toolbarSettingsActivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:collapseIcon="@drawable/arrow_back_mode"
+        android:collapseIcon="@drawable/bt_arrow_back_mode"
         android:padding="4dp"
         android:title="@string/settings">
     </Toolbar>
@@ -48,7 +48,7 @@
         <ImageButton
             style="@style/IconMenuSettings"
             android:id="@+id/buttonShareApplication"
-            android:src="@drawable/send_mode" />
+            android:src="@drawable/bt_send_mode" />
 
     </LinearLayout>
 
@@ -64,7 +64,7 @@
         <ImageButton
             style="@style/IconMenuSettings"
             android:id="@+id/buttonSupport"
-            android:src="@drawable/support_mode" />
+            android:src="@drawable/bt_support_mode" />
     </LinearLayout>
 
     <LinearLayout

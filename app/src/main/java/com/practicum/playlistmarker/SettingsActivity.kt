@@ -19,7 +19,7 @@ class SettingsActivity : AppCompatActivity() {
             getSharedPreferences(PRACTICUM_PLAYLISTMARKER_PREFERENCES_THEME, MODE_PRIVATE)
 
         val toolbarSearch = findViewById<Toolbar>(R.id.toolbarSettingsActivity)
-        toolbarSearch.setNavigationIcon(R.drawable.arrow_back_mode)
+        toolbarSearch.setNavigationIcon(R.drawable.bt_arrow_back_mode)
         toolbarSearch.setNavigationOnClickListener { finish() }
         toolbarSearch.setTitleTextAppearance(this, R.style.SecondsActivityMediumTextAppearance)
 
@@ -42,18 +42,18 @@ class SettingsActivity : AppCompatActivity() {
             val body = resources.getString(R.string.support_body)
             val uri: Uri = Uri.parse("mailto:")
                 .buildUpon()
-                .appendQueryParameter("to", email)
-                .appendQueryParameter("subject", subject)
-                .appendQueryParameter("body", body)
+                .appendQueryParameter(resources.getString(R.string.to), email)
+                .appendQueryParameter(resources.getString(R.string.subject), subject)
+                .appendQueryParameter(resources.getString(R.string.body), body)
                 .build()
             val emailIntent = Intent(Intent.ACTION_SENDTO, uri)
-            startActivity(Intent.createChooser(emailIntent, "subject"))
+            startActivity(Intent.createChooser(emailIntent, (resources.getString(R.string.subject))))
         }
 
         val buttonTermsOfUse = findViewById<ImageButton>(R.id.buttonTermsOfUse)
         buttonTermsOfUse.setOnClickListener {
             val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.YP_offer_url)))
+                Intent(Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.yandex_practicum_offer_url)))
             startActivity(browserIntent)
         }
 

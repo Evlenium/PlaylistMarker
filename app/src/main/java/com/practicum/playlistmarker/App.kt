@@ -29,6 +29,7 @@ class App:Application() {
     companion object{
         const val PRACTICUM_PLAYLISTMARKER_PREFERENCES_TRACKLIST = "practicum_theme_preferences"
         const val PRACTICUM_PLAYLISTMARKER_PREFERENCES_THEME = "practicum_theme_preferences_theme"
+        const val TRACK = "track"
         const val EDIT_THEME = "key_for_edit_theme"
         const val TRACKS_LIST_KEY = "key_for_tracks_list"
     }

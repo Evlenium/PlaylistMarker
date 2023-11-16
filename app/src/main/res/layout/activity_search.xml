@@ -13,14 +13,14 @@
         android:id="@+id/toolbarSearchActivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:collapseIcon="@drawable/arrow_back_mode"
+        android:collapseIcon="@drawable/bt_arrow_back_mode"
         android:padding="4dp"
         android:title="@string/search" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/standartIndentationActivitySearch"
+        android:layout_marginHorizontal="@dimen/standart_indentation_activity_search"
         android:layout_marginVertical="8dp">
 
         <EditText
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:layout_marginEnd="12dp"
-            android:src="@drawable/clear"
+            android:src="@drawable/bt_clear"
             android:visibility="gone" />
     </FrameLayout>
 
@@ -81,7 +81,7 @@
                 android:id="@+id/rvTracks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/standartIndentationActivitySearch"
+                android:layout_marginTop="@dimen/standart_indentation_activity_search"
                 android:orientation="vertical"
                 android:visibility="gone"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -101,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:srcCompat="@drawable/internet_error" />
+                app:srcCompat="@drawable/ph_internet_error" />
 
             <TextView
                 android:id="@+id/tvErrorSearch"
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="@dimen/standartIndentationActivitySearch"
+                android:layout_marginTop="@dimen/standart_indentation_activity_search"
                 android:fontFamily="@font/ys_display_medium"
                 android:lines="4"
                 android:textAlignment="center"

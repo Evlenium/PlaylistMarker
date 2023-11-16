@@ -12,10 +12,20 @@
     <string name="support_mail">Evlenium@yandex.ru</string>
     <string name="support_subject">«Сообщение разработчикам и разработчицам приложения Playlist Maker»</string>
     <string name="support_body">«Спасибо разработчикам и разработчицам за крутое приложение!»</string>
-    <string name="YP_offer_url">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="yandex_practicum_offer_url">https://yandex.ru/legal/practicum_offer/</string>
     <string name="error_internet_connection">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
     <string name="nothing_found">Ничего не нашлось</string>
     <string name="update">Обновить</string>
     <string name="you_searched">Вы искали</string>
     <string name="clear_history">Очистить историю</string>
+    <string name="length">Длительность</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
+    <string name="genre">Жанр</string>
+    <string name="country">Страна</string>
+    <string name="fixed_time_track">0:30</string>
+    <string name="to">to</string>
+    <string name="subject">subject</string>
+    <string name="body">body</string>
+    <string name="new_dimension_image">512x512bb.jpg</string>
 </resources>

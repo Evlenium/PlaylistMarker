@@ -1,6 +1,7 @@
 package com.practicum.playlistmarker
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,6 +12,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmarker.App.Companion.PRACTICUM_PLAYLISTMARKER_PREFERENCES_TRACKLIST
+import com.practicum.playlistmarker.App.Companion.TRACK
 import com.practicum.playlistmarker.App.Companion.TRACKS_LIST_KEY
 import com.practicum.playlistmarker.TrackAdapter.TrackClickListener
 import retrofit2.Call
@@ -38,6 +40,9 @@ class SearchActivity : AppCompatActivity() {
 
         val trackClickListener = TrackClickListener {
             searchHistory.saveTrack(it)
+            val audioPlayerIntent = Intent(this, AudioPlayer::class.java)
+            audioPlayerIntent.putExtra(TRACK,it)
+            startActivity(audioPlayerIntent)
         }
 
         fun hideMenuHistory() {
@@ -46,14 +51,15 @@ class SearchActivity : AppCompatActivity() {
         }
 
         var trackAdapter = TrackAdapter(mutableListOf())
-        val buttonClickListener = TrackAdapter.ButtonClickListener {
+        val buttonClearHistoryClickListener = TrackAdapter.ButtonClickListener {
             sharedPreferences.edit().clear().apply()
             searchHistory.clearHistory()
             trackAdapter.setUpTracks(searchHistory.tracksBufferSaved as ArrayList<TrackSearchItem.Track>)
             hideMenuHistory()
         }
 
-        trackAdapter = TrackAdapter(mutableListOf(), trackClickListener, buttonClickListener)
+        trackAdapter =
+            TrackAdapter(mutableListOf(), trackClickListener, buttonClearHistoryClickListener)
 
         rvTrack.adapter = trackAdapter
 
@@ -65,9 +71,6 @@ class SearchActivity : AppCompatActivity() {
 
         val tracks = sharedPreferences.getString(TRACKS_LIST_KEY, null)
         if (tracks != null) {
-//            rvTrack.visibility = View.VISIBLE
-//            bClearHistory.visibility = View.VISIBLE
-//            tvYouSearched.visibility = View.VISIBLE
             searchHistory.tracksBufferSaved =
                 searchHistory.createTrackFromJson(tracks).toMutableList()
             trackAdapter.setUpTracks(searchHistory.getSavedTracks() as ArrayList<TrackSearchItem.Track>)
@@ -76,7 +79,7 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        toolbarSearch.setNavigationIcon(R.drawable.arrow_back_mode)
+        toolbarSearch.setNavigationIcon(R.drawable.bt_arrow_back_mode)
         toolbarSearch.setNavigationOnClickListener { finish() }
         toolbarSearch.setTitleTextAppearance(
             this,
@@ -217,7 +220,7 @@ class SearchActivity : AppCompatActivity() {
             SearchError.INTERNET_CONNECTION_ERROR -> {
                 phLayoutError.visibility = View.VISIBLE
                 tvErrorSearch.text = getString(R.string.error_internet_connection)
-                ivErrorConnection.setImageResource(R.drawable.internet_error)
+                ivErrorConnection.setImageResource(R.drawable.ph_internet_error)
                 bUpdateSearch.visibility = View.VISIBLE
             }
             SearchError.EMPTY_SEARCH_ERROR -> {

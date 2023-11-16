@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="buttonMainCornerRadius">16dp</dimen>
-    <dimen name="buttonMainIconPadding">8dp</dimen>
-    <dimen name="standartIndentationActivitySearch">16dp</dimen>
+    <dimen name="button_main_corner_radius">16dp</dimen>
+    <dimen name="button_main_icon_padding">8dp</dimen>
+    <dimen name="standart_indentation_activity_search">16dp</dimen>
+
+    <dimen name="margin_item_parent_audio_player">24dp</dimen>
+    <dimen name="margin_items_audio_player">8dp</dimen>
 </resources>
