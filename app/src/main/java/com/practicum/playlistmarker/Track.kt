@@ -1,9 +1,13 @@
 package com.practicum.playlistmarker
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-sealed class TrackSearchItem: Serializable {
+sealed class TrackSearchItem : Parcelable {
+    @Parcelize
     object Button : TrackSearchItem()
+
+    @Parcelize
     data class Track(
         val trackName: String,
         val artistName: String,
@@ -14,5 +18,6 @@ sealed class TrackSearchItem: Serializable {
         val releaseDate: String,
         val primaryGenreName: String,
         val country: String,
+        val previewUrl: String,
     ) : TrackSearchItem()
 }

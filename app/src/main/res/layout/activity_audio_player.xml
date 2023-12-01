@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/background_media_color"
-    tools:context=".AudioPlayer">
+    tools:context=".AudioPlayerActivity">
 
     <Toolbar
         android:id="@+id/toolbarMediaLibraryActivity"
@@ -104,12 +104,12 @@
         android:layout_marginBottom="30dp"
         android:fontFamily="@font/ys_display_medium"
         android:fontWeight="500"
-        android:text="@string/fixed_time_track"
         android:textColor="?attr/text_media_color"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/tvConstLength"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text = "@string/fixed_time_track"/>
 
     <TextView
         android:id="@+id/tvConstLength"
