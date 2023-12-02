@@ -137,7 +137,7 @@ class SearchActivity : AppCompatActivity() {
                     if (inputEditTextSearch.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
                 if (s != null) {
                     inputTextFromSearch = s.toString()
-                    if (s.isNotEmpty()){
+                    if (s.isNotEmpty()) {
                         searchDebounce()
                     }
                 }
@@ -149,7 +149,7 @@ class SearchActivity : AppCompatActivity() {
         inputEditTextSearch.addTextChangedListener(searchTextWatcher)
         inputEditTextSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE && inputEditTextSearch.text.isNotEmpty()) {
-                if (!flagSuccessfulDownload){
+                if (!flagSuccessfulDownload) {
                     trackSearch()
                 }
                 true
@@ -187,9 +187,10 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun trackSearch() {
+
         hideMenuHistory()
         pbSearch.visibility = View.VISIBLE
-
+        phLayoutError.visibility = View.GONE
         if (inputEditTextSearch.text.isNotEmpty()) {
             iTunesService.search(inputEditTextSearch.text.toString())
                 .enqueue(object : Callback<TracksResponse> {
@@ -199,7 +200,7 @@ class SearchActivity : AppCompatActivity() {
                     ) {
                         pbSearch.visibility = View.GONE
                         if (response.code() == 200) {
-                            flagSuccessfulDownload=true
+                            flagSuccessfulDownload = true
                             phLayoutError.visibility = View.GONE
                             bUpdateSearch.visibility = View.GONE
                             hideMenuHistory()
@@ -218,7 +219,7 @@ class SearchActivity : AppCompatActivity() {
                                 )
                             }
                         } else {
-                            flagSuccessfulDownload=false
+                            flagSuccessfulDownload = false
                             hideMenuHistory()
                             bindErrors(
                                 SearchError.INTERNET_CONNECTION_ERROR,
@@ -229,7 +230,7 @@ class SearchActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
-                        flagSuccessfulDownload=false
+                        flagSuccessfulDownload = false
                         hideMenuHistory()
                         bindErrors(
                             SearchError.INTERNET_CONNECTION_ERROR,
