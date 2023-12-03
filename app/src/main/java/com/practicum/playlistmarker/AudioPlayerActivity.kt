@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -24,6 +25,17 @@ class AudioPlayerActivity : AppCompatActivity() {
     private var playerState = STATE_DEFAULT
     private lateinit var url: String
     private var mainThreadHandler: Handler? = null
+    private var flagMusicComplete = false
+
+    private lateinit var tvTrackName: TextView
+    private lateinit var tvNameArtist: TextView
+    private lateinit var tvAlbum: TextView
+    private lateinit var tvYear: TextView
+    private lateinit var tvGenre: TextView
+    private lateinit var tvCountry: TextView
+    private lateinit var tvLength: TextView
+
+    private lateinit var ivTrackImage: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,26 +51,31 @@ class AudioPlayerActivity : AppCompatActivity() {
             R.style.SecondsActivityMediumTextAppearance
         )
 
-        val ivTrackImage = findViewById<ImageView>(R.id.ivTrackImage)
+        ivTrackImage = findViewById(R.id.ivTrackImage)
 
         btPlay = findViewById(R.id.btPlay)
 
-        val tvTrackName = findViewById<TextView>(R.id.tvTrackName)
-        val tvNameArtist = findViewById<TextView>(R.id.tvNameArtist)
-        val tvAlbum = findViewById<TextView>(R.id.tvAlbum)
-        val tvYear = findViewById<TextView>(R.id.tvYear)
-        val tvGenre = findViewById<TextView>(R.id.tvGenre)
-        val tvCountry = findViewById<TextView>(R.id.tvCountry)
-        val tvLength = findViewById<TextView>(R.id.tvLength)
+        tvTrackName = findViewById(R.id.tvTrackName)
+        tvNameArtist = findViewById(R.id.tvNameArtist)
+        tvAlbum = findViewById(R.id.tvAlbum)
+        tvYear = findViewById(R.id.tvYear)
+        tvGenre = findViewById(R.id.tvGenre)
+        tvCountry = findViewById(R.id.tvCountry)
+        tvLength = findViewById(R.id.tvLength)
 
         tvPreLength = findViewById(R.id.tvPrelength)
-        tvPreLength.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+        tvPreLength.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
 
         val track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra(App.TRACK, TrackSearchItem.Track::class.java)
         } else {
             intent.getParcelableExtra(App.TRACK)
         }
+        parseTrackInfo(track)
+    }
+
+    private fun parseTrackInfo(track: TrackSearchItem.Track?) {
         if (track != null) {
             url = track.previewUrl
             preparePlayer()
@@ -76,8 +93,10 @@ class AudioPlayerActivity : AppCompatActivity() {
             tvTrackName.text = track.trackName
             tvNameArtist.text = track.artistName
             tvAlbum.text = track.collectionName
-            val year = track.releaseDate.substring(0..3)
-            tvYear.text = year
+            val formattedTime = SimpleDateFormat("yyyy").format(
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(track.releaseDate)
+            )
+            tvYear.text = formattedTime
             tvGenre.text = track.primaryGenreName
             tvCountry.text = track.country
             tvLength.text = SimpleDateFormat(
@@ -110,33 +129,38 @@ class AudioPlayerActivity : AppCompatActivity() {
         mediaPlayer.setOnPreparedListener {
             btPlay.isEnabled = true
             playerState = STATE_PREPARED
+            mediaPlayer.seekTo(0)
         }
         mediaPlayer.setOnCompletionListener {
             btPlay.setImageResource(R.drawable.bt_play)
             playerState = STATE_PREPARED
+            tvPreLength.text = resources.getString(R.string.fixed_time_track)
+            flagMusicComplete = true
         }
     }
 
     private fun startPlayer() {
+        flagMusicComplete = false
         val startTime = System.currentTimeMillis()
         mediaPlayer.start()
         btPlay.setImageResource(R.drawable.bt_paused)
         playerState = STATE_PLAYING
         mainThreadHandler?.post(
-            createUpdateTimerTask(startTime)
+            createUpdateTimerTask()
         )
     }
 
-    private fun createUpdateTimerTask(startTime: Long): Runnable {
+    private fun createUpdateTimerTask(): Runnable {
         return object : Runnable {
             override fun run() {
-                val elapsedTime = System.currentTimeMillis() - startTime
-                val remainingTime = LENGTH_TRACK - elapsedTime
-                if (remainingTime > 0) {
-                    tvPreLength.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+                if (!flagMusicComplete) {
+                    tvPreLength.text = SimpleDateFormat(
+                        "mm:ss",
+                        Locale.getDefault()
+                    ).format(mediaPlayer.currentPosition)
+                    Log.d("MyLog", mediaPlayer.currentPosition.toString())
                     mainThreadHandler?.postDelayed(this, DELAY_UPDATE)
-                }
-                else{
+                } else {
                     tvPreLength.text = resources.getString(R.string.fixed_time_track)
                 }
             }
@@ -169,6 +193,5 @@ class AudioPlayerActivity : AppCompatActivity() {
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
         private const val DELAY_UPDATE = 300L
-        private const val LENGTH_TRACK = 30000L
     }
 }
