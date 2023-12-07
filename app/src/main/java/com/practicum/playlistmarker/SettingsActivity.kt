@@ -18,7 +18,7 @@ class SettingsActivity : AppCompatActivity() {
         val sharedPrefs =
             getSharedPreferences(PRACTICUM_PLAYLISTMARKER_PREFERENCES_THEME, MODE_PRIVATE)
 
-        val toolbarSearch = findViewById<Toolbar>(R.id.toolbarSettingsActivity)
+        val toolbarSearch = findViewById<Toolbar>(R.id.toolbarSettings)
         toolbarSearch.setNavigationIcon(R.drawable.bt_arrow_back_mode)
         toolbarSearch.setNavigationOnClickListener { finish() }
         toolbarSearch.setTitleTextAppearance(this, R.style.SecondsActivityMediumTextAppearance)

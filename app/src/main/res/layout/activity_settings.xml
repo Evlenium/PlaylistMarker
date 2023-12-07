@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <Toolbar
-        android:id="@+id/toolbarSettingsActivity"
+        android:id="@+id/toolbarSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:collapseIcon="@drawable/bt_arrow_back_mode"
