@@ -7,7 +7,7 @@
     android:background="?attr/background_search_color"
     android:orientation="vertical"
     android:visibility="visible"
-    tools:context=".SearchActivity">
+    tools:context=".ui.search.SearchActivity">
 
     <Toolbar
         android:id="@+id/toolbarSearchActivity"

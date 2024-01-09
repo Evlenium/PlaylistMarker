@@ -1,8 +1,10 @@
-package com.practicum.playlistmarker
+package com.practicum.playlistmarker.ui.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmarker.R
+import com.practicum.playlistmarker.domain.model.TrackSearchItem
 
 class TrackAdapter(
     private var data: List<TrackSearchItem>,
