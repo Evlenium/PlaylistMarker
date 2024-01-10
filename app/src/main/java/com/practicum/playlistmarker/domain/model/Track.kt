@@ -1,6 +1,7 @@
 package com.practicum.playlistmarker.domain.model
 
 import android.os.Parcelable
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -22,21 +23,24 @@ sealed class TrackSearchItem : Parcelable {
         val country: String,
         val previewUrl: String,
     ) : TrackSearchItem() {
-        fun getResizeUrlArtwork(): String {
-            return artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
-        }
 
-        fun getYearRelease(): String {
-            return SimpleDateFormat("yyyy").format(
+        @IgnoredOnParcel
+        val dateYearFormat: String by lazy {
+            SimpleDateFormat("yyyy").format(
                 SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(releaseDate)
             )
         }
 
-        fun getTrackTime(): String {
-            return SimpleDateFormat(
+        @IgnoredOnParcel
+        val trackTimeFormat: String by lazy {
+            SimpleDateFormat(
                 "mm:ss",
                 Locale.getDefault()
             ).format(trackTimeMillis.toLong())
+        }
+
+        fun getResizeUrlArtwork(): String {
+            return artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
         }
     }
 }

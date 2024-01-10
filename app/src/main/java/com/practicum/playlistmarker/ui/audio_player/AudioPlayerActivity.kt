@@ -27,8 +27,7 @@ import java.util.Locale
 class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var btPlay: ImageButton
     private lateinit var tvPreLength: TextView
-    private val creator = Creator
-    private val mediaPlayer = creator.providePlayerInteractor()
+    private val mediaPlayer = Creator.providePlayerInteractor()
     private var playerState = States.STATE_DEFAULT.state
 
     private lateinit var url: String
@@ -96,15 +95,15 @@ class AudioPlayerActivity : AppCompatActivity() {
             tvTrackName.text = track.trackName
             tvNameArtist.text = track.artistName
             tvAlbum.text = track.collectionName
-            tvYear.text = track.getYearRelease()
+            tvYear.text = track.dateYearFormat
             tvGenre.text = track.primaryGenreName
             tvCountry.text = track.country
-            tvLength.text = track.getTrackTime()
+            tvLength.text = track.trackTimeFormat
         }
         btPlay.setOnClickListener {
             mediaPlayer.playbackControl()
         }
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.Main) {
             mediaPlayer.getPlayerStateFlow().collect { playerState ->
                 this@AudioPlayerActivity.playerState = playerState
                 mainThreadHandler?.post { checkState(playerState) }
