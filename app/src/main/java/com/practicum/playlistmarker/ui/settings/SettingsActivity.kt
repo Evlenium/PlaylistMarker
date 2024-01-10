@@ -1,4 +1,4 @@
-package com.practicum.playlistmarker
+package com.practicum.playlistmarker.ui.settings
 
 import android.content.Intent
 import android.net.Uri
@@ -7,8 +7,10 @@ import android.widget.ImageButton
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import com.practicum.playlistmarker.App
 import com.practicum.playlistmarker.App.Companion.EDIT_THEME
 import com.practicum.playlistmarker.App.Companion.PRACTICUM_PLAYLISTMARKER_PREFERENCES_THEME
+import com.practicum.playlistmarker.R
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

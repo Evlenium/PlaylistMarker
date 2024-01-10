@@ -1,4 +1,4 @@
-package com.practicum.playlistmarker
+package com.practicum.playlistmarker.ui.search
 
 import android.content.Context
 import android.content.Intent
@@ -16,7 +16,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmarker.App.Companion.PRACTICUM_PLAYLISTMARKER_PREFERENCES_TRACKLIST
 import com.practicum.playlistmarker.App.Companion.TRACK
 import com.practicum.playlistmarker.App.Companion.TRACKS_LIST_KEY
-import com.practicum.playlistmarker.TrackAdapter.TrackClickListener
+import com.practicum.playlistmarker.R
+import com.practicum.playlistmarker.data.SearchHistory
+import com.practicum.playlistmarker.ui.search.TrackAdapter.TrackClickListener
+import com.practicum.playlistmarker.data.dto.TracksResponse
+import com.practicum.playlistmarker.data.network.iTunesService
+import com.practicum.playlistmarker.domain.model.TrackSearchItem
+import com.practicum.playlistmarker.ui.audio_player.AudioPlayerActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

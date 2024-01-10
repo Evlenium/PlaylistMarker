@@ -1,11 +1,12 @@
-package com.practicum.playlistmarker
+package com.practicum.playlistmarker.data
 
 import com.google.gson.Gson
+import com.practicum.playlistmarker.domain.model.TrackSearchItem
 
 class SearchHistory {
 
     var tracksBufferSaved = mutableListOf<TrackSearchItem.Track>()
-    var searchSaved = mutableListOf<TrackSearchItem>()
+    private var searchSaved = mutableListOf<TrackSearchItem>()
     fun getSavedTracks(): MutableList<TrackSearchItem> {
         val trackIterator = tracksBufferSaved.iterator()
         while (trackIterator.hasNext()) {

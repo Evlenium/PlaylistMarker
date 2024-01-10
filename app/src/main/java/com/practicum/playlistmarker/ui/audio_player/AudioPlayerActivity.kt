@@ -1,7 +1,6 @@
-package com.practicum.playlistmarker
+package com.practicum.playlistmarker.ui.audio_player
 
 import android.content.res.Resources
-import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -12,20 +11,27 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import java.net.URL
+import com.practicum.playlistmarker.App
+import com.practicum.playlistmarker.R
+import com.practicum.playlistmarker.creator.Creator
+import com.practicum.playlistmarker.domain.model.States
+import com.practicum.playlistmarker.domain.model.TrackSearchItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var btPlay: ImageButton
     private lateinit var tvPreLength: TextView
-    private var mediaPlayer = MediaPlayer()
-    private var playerState = STATE_DEFAULT
+    private val mediaPlayer = Creator.providePlayerInteractor()
+    private var playerState = States.STATE_DEFAULT.state
+
     private lateinit var url: String
     private var mainThreadHandler: Handler? = null
-    private var flagMusicComplete = false
 
     private lateinit var tvTrackName: TextView
     private lateinit var tvNameArtist: TextView
@@ -65,8 +71,10 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         tvPreLength = findViewById(R.id.tvPrelength)
         tvPreLength.text =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
-
+            SimpleDateFormat(
+                "mm:ss",
+                Locale.getDefault()
+            ).format(mediaPlayer.getPlayerCurrentPosition())
         val track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra(App.TRACK, TrackSearchItem.Track::class.java)
         } else {
@@ -78,120 +86,86 @@ class AudioPlayerActivity : AppCompatActivity() {
     private fun parseTrackInfo(track: TrackSearchItem.Track?) {
         if (track != null) {
             url = track.previewUrl
-            preparePlayer()
-            val imageUrl = URL(
-                track.artworkUrl100.replaceAfterLast(
-                    '/',
-                    resources.getString(R.string.new_dimension_image)
-                )
-            )
+            mediaPlayer.preparePlayer(track)
             Glide.with(ivTrackImage)
-                .load(imageUrl)
+                .load(track.getResizeUrlArtwork())
                 .placeholder(R.drawable.empty_track_image)
                 .transform(RoundedCorners(dpToPx(8)))
                 .into(ivTrackImage)
             tvTrackName.text = track.trackName
             tvNameArtist.text = track.artistName
             tvAlbum.text = track.collectionName
-            val formattedTime = SimpleDateFormat("yyyy").format(
-                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(track.releaseDate)
-            )
-            tvYear.text = formattedTime
+            tvYear.text = track.dateYearFormat
             tvGenre.text = track.primaryGenreName
             tvCountry.text = track.country
-            tvLength.text = SimpleDateFormat(
-                "mm:ss",
-                Locale.getDefault()
-            ).format(track.trackTimeMillis.toLong())
+            tvLength.text = track.trackTimeFormat
         }
         btPlay.setOnClickListener {
-            playbackControl()
+            mediaPlayer.playbackControl()
+        }
+        lifecycleScope.launch(Dispatchers.Main) {
+            mediaPlayer.getPlayerStateFlow().collect { playerState ->
+                this@AudioPlayerActivity.playerState = playerState
+                mainThreadHandler?.post { checkState(playerState) }
+            }
         }
     }
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        mediaPlayer.onPause()
+        removeTimerPlayer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        mediaPlayer.onDestroy()
+        removeTimerPlayer()
     }
 
     private fun dpToPx(dp: Int): Int {
         return (dp * Resources.getSystem().displayMetrics.density).toInt()
     }
 
-    private fun preparePlayer() {
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            btPlay.isEnabled = true
-            playerState = STATE_PREPARED
-            mediaPlayer.seekTo(0)
-        }
-        mediaPlayer.setOnCompletionListener {
-            btPlay.setImageResource(R.drawable.bt_play)
-            playerState = STATE_PREPARED
-            tvPreLength.text = resources.getString(R.string.fixed_time_track)
-            flagMusicComplete = true
-        }
-    }
-
-    private fun startPlayer() {
-        flagMusicComplete = false
-        val startTime = System.currentTimeMillis()
-        mediaPlayer.start()
-        btPlay.setImageResource(R.drawable.bt_paused)
-        playerState = STATE_PLAYING
-        mainThreadHandler?.post(
-            createUpdateTimerTask()
-        )
-    }
-
     private fun createUpdateTimerTask(): Runnable {
         return object : Runnable {
             override fun run() {
-                if (!flagMusicComplete) {
+                if (playerState == States.STATE_PLAYING.state) {
                     tvPreLength.text = SimpleDateFormat(
                         "mm:ss",
                         Locale.getDefault()
-                    ).format(mediaPlayer.currentPosition)
-                    Log.d("MyLog", mediaPlayer.currentPosition.toString())
+                    ).format(mediaPlayer.getPlayerCurrentPosition())
+                    Log.d("MyLog", mediaPlayer.getPlayerCurrentPosition().toString())
                     mainThreadHandler?.postDelayed(this, DELAY_UPDATE)
-                } else {
-                    tvPreLength.text = resources.getString(R.string.fixed_time_track)
                 }
             }
         }
     }
 
-
-    private fun pausePlayer() {
+    private fun removeTimerPlayer() {
         mainThreadHandler?.removeCallbacksAndMessages(null)
-        mediaPlayer.pause()
-        btPlay.setImageResource(R.drawable.bt_play)
-        playerState = STATE_PAUSED
     }
 
-    private fun playbackControl() {
+    private fun checkState(playerState: Int) {
         when (playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
+            States.STATE_PLAYING.state -> {
+                mainThreadHandler?.post(createUpdateTimerTask())
+                btPlay.setImageResource(R.drawable.bt_paused)
             }
 
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
+            States.STATE_PREPARED.state -> {
+                btPlay.setImageResource(R.drawable.bt_play)
+                removeTimerPlayer()
+                tvPreLength.text = resources.getString(R.string.fixed_time_track)
+            }
+
+            States.STATE_PAUSED.state -> {
+                btPlay.setImageResource(R.drawable.bt_play)
             }
         }
     }
 
     companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
         private const val DELAY_UPDATE = 300L
     }
 }

@@ -1,9 +1,13 @@
-package com.practicum.playlistmarker
+package com.practicum.playlistmarker.ui.main
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.practicum.playlistmarker.R
+import com.practicum.playlistmarker.ui.media_library.MediaLibraryActivity
+import com.practicum.playlistmarker.ui.search.SearchActivity
+import com.practicum.playlistmarker.ui.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

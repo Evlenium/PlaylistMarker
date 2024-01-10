@@ -1,5 +1,6 @@
-package com.practicum.playlistmarker
+package com.practicum.playlistmarker.data.network
 
+import com.practicum.playlistmarker.data.dto.TracksResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
