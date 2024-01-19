@@ -1,46 +1,46 @@
 package com.practicum.playlistmarker.player.domain.use_case
 
+import com.practicum.playlistmarker.player.domain.api.Player
 import com.practicum.playlistmarker.player.domain.api.PlayerInteractor
-import com.practicum.playlistmarker.player.domain.api.PlayerRepository
 import com.practicum.playlistmarker.player.domain.model.StatesPlayer
-import com.practicum.playlistmarker.search.data.dto.TrackDto
+import com.practicum.playlistmarker.player.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 
-class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInteractor {
+class PlayerInteractorImpl(private val player: Player) : PlayerInteractor {
     override fun onPause() {
-        repository.onPause()
+        player.onPause()
     }
 
     override fun onDestroy() {
-        repository.onDestroy()
+        player.onDestroy()
     }
 
-    override fun preparePlayer(track: TrackDto) {
-        repository.preparePlayer(track)
+    override fun preparePlayer(track: Track) {
+        player.preparePlayer(track)
     }
 
     override fun startPlayer() {
-        repository.startPlayer()
+        player.startPlayer()
     }
 
     override fun pausePlayer() {
-        repository.pausePlayer()
+        player.pausePlayer()
     }
 
     override fun playbackControl() {
-        repository.playbackControl()
+        player.playbackControl()
     }
 
     override fun getPlayerStateFlow(): Flow<StatesPlayer> {
-        return repository.getPlayerStateFlow()
+        return player.getPlayerStateFlow()
     }
 
     override fun getPlayerCurrentPosition(): Int {
-        return repository.getPlayerCurrentPosition()
+        return player.getPlayerCurrentPosition()
     }
 
     override fun reset() {
-        repository.reset()
+        player.reset()
     }
 
 }

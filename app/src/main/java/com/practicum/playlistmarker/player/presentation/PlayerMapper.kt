@@ -1,11 +1,11 @@
 package com.practicum.playlistmarker.player.presentation
 
-import com.practicum.playlistmarker.search.data.dto.TrackDto
+import com.practicum.playlistmarker.player.domain.model.Track
 import com.practicum.playlistmarker.search.presentation.model.TrackSearchItem
 
 object PlayerMapper {
-    fun mapToTrackForPlayer(track: TrackSearchItem.Track): TrackDto {
-        return TrackDto(
+    fun mapToTrackForPlayer(track: TrackSearchItem.Track): Track {
+        return Track(
             trackName = track.trackName,
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,

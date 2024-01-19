@@ -1,5 +1,6 @@
 package com.practicum.playlistmarker.player.ui
 
+import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ import com.practicum.playlistmarker.App
 import com.practicum.playlistmarker.R
 import com.practicum.playlistmarker.player.domain.model.StatesPlayer
 import com.practicum.playlistmarker.player.presentation.AudioPlayerViewModel
+import com.practicum.playlistmarker.player.presentation.AudioPlayerViewModelFactory
 import com.practicum.playlistmarker.search.presentation.model.TrackSearchItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,11 +50,8 @@ class AudioPlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_player)
-
         audioPlayerViewModel =
-            ViewModelProvider(
-                this
-            )[AudioPlayerViewModel::class.java]
+            ViewModelProvider(this, AudioPlayerViewModelFactory())[AudioPlayerViewModel::class.java]
 
         val toolbarMediaLibraryActivity = findViewById<Toolbar>(R.id.toolbarMediaLibraryActivity)
         toolbarMediaLibraryActivity.setNavigationIcon(R.drawable.bt_arrow_back_mode)
@@ -88,7 +87,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             Glide.with(ivTrackImage)
                 .load(track.getResizeUrlArtwork())
                 .placeholder(R.drawable.empty_track_image)
-                .transform(RoundedCorners(audioPlayerViewModel.dpToPx(8)))
+                .transform(RoundedCorners(dpToPx(8)))
                 .into(ivTrackImage)
             tvTrackName.text = track.trackName
             tvNameArtist.text = track.artistName
@@ -157,6 +156,10 @@ class AudioPlayerActivity : AppCompatActivity() {
 
             }
         }
+    }
+
+    private fun dpToPx(dp: Int): Int {
+        return (dp * Resources.getSystem().displayMetrics.density).toInt()
     }
 
     companion object {

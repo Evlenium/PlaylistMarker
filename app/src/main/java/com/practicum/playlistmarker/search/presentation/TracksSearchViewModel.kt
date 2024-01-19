@@ -6,13 +6,12 @@ import android.os.Looper
 import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.practicum.playlistmarker.R
-import com.practicum.playlistmarker.search.data.dto.TrackDto
+import com.practicum.playlistmarker.player.domain.model.Track
 import com.practicum.playlistmarker.search.domain.api.TracksInteractor
 import com.practicum.playlistmarker.util.Creator
 
@@ -31,21 +30,10 @@ class TracksSearchViewModel(application: Application) : AndroidViewModel(applica
 
     private val stateLiveData = MutableLiveData<TracksState>()
 
-    private val mediatorStateLiveData = MediatorLiveData<TracksState>().also { liveData ->
-        liveData.addSource(stateLiveData) { trackState ->
-            liveData.value = when (trackState) {
-                is TracksState.Content -> TracksState.Content(trackState.tracks)
-                is TracksState.Empty -> trackState
-                is TracksState.Error -> trackState
-                is TracksState.Loading -> trackState
-            }
-        }
-    }
-
     private val tracksInteractor = Creator.provideTracksInteractor(getApplication())
     private val handler = Handler(Looper.getMainLooper())
 
-    fun observeState(): LiveData<TracksState> = mediatorStateLiveData
+    fun observeState(): LiveData<TracksState> = stateLiveData
 
     override fun onCleared() {
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
@@ -70,10 +58,10 @@ class TracksSearchViewModel(application: Application) : AndroidViewModel(applica
 
             tracksInteractor.searchTracks(newSearchText, object : TracksInteractor.TracksConsumer {
                 override fun consume(
-                    foundTracks: List<TrackDto>?,
+                    foundTracks: List<Track>?,
                     errorMessage: String?,
                 ) {
-                    val tracks = ArrayList<TrackDto>()
+                    val tracks = ArrayList<Track>()
                     if (foundTracks != null) {
                         tracks.addAll(foundTracks)
                     }
@@ -113,7 +101,7 @@ class TracksSearchViewModel(application: Application) : AndroidViewModel(applica
         stateLiveData.postValue(state)
     }
 
-    fun addToHistory(track: TrackDto) {
+    fun addToHistory(track: Track) {
         tracksInteractor.addTrackToHistory(track)
     }
 
@@ -121,7 +109,7 @@ class TracksSearchViewModel(application: Application) : AndroidViewModel(applica
         tracksInteractor.clearHistory()
     }
 
-    fun getTracksHistory(): MutableList<TrackDto> {
+    fun getTracksHistory(): List<Track> {
         return tracksInteractor.getTracksHistory()
     }
 }

@@ -6,8 +6,8 @@ import kotlinx.parcelize.Parcelize
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-sealed class TrackSearchItem : Parcelable {
-    @Parcelize
+sealed class TrackSearchItem {
+
     object Button : TrackSearchItem()
 
     @Parcelize
@@ -22,7 +22,7 @@ sealed class TrackSearchItem : Parcelable {
         val primaryGenreName: String,
         val country: String,
         val previewUrl: String,
-    ) : TrackSearchItem() {
+    ) : TrackSearchItem(), Parcelable {
 
         @IgnoredOnParcel
         val dateYearFormat: String by lazy {

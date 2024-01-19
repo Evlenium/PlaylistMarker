@@ -22,12 +22,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmarker.App.Companion.TRACK
 import com.practicum.playlistmarker.R
-import com.practicum.playlistmarker.search.presentation.model.TrackSearchItem
+import com.practicum.playlistmarker.player.domain.model.Track
+import com.practicum.playlistmarker.player.ui.AudioPlayerActivity
+import com.practicum.playlistmarker.search.presentation.TrackMapper
 import com.practicum.playlistmarker.search.presentation.TracksSearchViewModel
 import com.practicum.playlistmarker.search.presentation.TracksState
-import com.practicum.playlistmarker.player.ui.AudioPlayerActivity
-import com.practicum.playlistmarker.search.data.dto.TrackDto
-import com.practicum.playlistmarker.search.presentation.TrackMapper
+import com.practicum.playlistmarker.search.presentation.model.TrackSearchItem
 import com.practicum.playlistmarker.search.ui.TrackAdapter.TrackClickListener
 
 class SearchActivity : AppCompatActivity() {
@@ -79,7 +79,7 @@ class SearchActivity : AppCompatActivity() {
 
         val trackClickListener = TrackClickListener {
             if (clickDebounce()) {
-                val track = TrackMapper.mapToTrackDto(it)
+                val track = TrackMapper.mapToTrack(it)
                 viewModel.addToHistory(track)
                 val audioPlayerIntent = Intent(this, AudioPlayerActivity::class.java)
                 audioPlayerIntent.putExtra(TRACK, it)
@@ -95,20 +95,8 @@ class SearchActivity : AppCompatActivity() {
             TrackAdapter(mutableListOf(), trackClickListener, buttonClearHistoryClickListener)
 
         rvTrack.adapter = trackAdapter
+        showHistory()
 
-        val tracks = viewModel.getTracksHistory()
-        if (tracks != null) {
-            val searchSaved = mutableListOf<TrackSearchItem>()
-            val trackList = tracks.map { track ->
-                TrackMapper.mapToTrackSearchWithButton(track)
-            }
-            if (trackList.isNotEmpty()) {
-                searchSaved.addAll(trackList.asReversed())
-                searchSaved.add(TrackSearchItem.Button)
-            }
-            trackAdapter.setUpTracks(searchSaved)
-            rvTrack.visibility = View.VISIBLE
-        }
 
         toolbarSearch.setNavigationIcon(R.drawable.bt_arrow_back_mode)
         toolbarSearch.setNavigationOnClickListener { finish() }
@@ -125,7 +113,6 @@ class SearchActivity : AppCompatActivity() {
                     getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                 imm?.hideSoftInputFromWindow(view.windowToken, 0)
                 phLayoutError.visibility = View.GONE
-                hideMenuHistory()
             }
         }
 
@@ -149,6 +136,9 @@ class SearchActivity : AppCompatActivity() {
                     if (s.isNotEmpty()) {
                         inputTextFromSearch = s.toString()
                         viewModel.searchDebounce(inputTextFromSearch!!)
+                    }
+                    else if(inputEditTextSearch.hasFocus()&&s.isEmpty()){
+                        showHistory()
                     }
                 }
             }
@@ -174,6 +164,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         inputEditTextSearch.setOnFocusChangeListener { view, hasFocus ->
+            showHistory()
         }
         viewModel.observeState().observe(this) {
             render(it)
@@ -186,13 +177,13 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showLoading() {
-        rvTrack.visibility = View.GONE
+        hideMenuHistory()
         phLayoutError.visibility = View.GONE
         pbSearch.visibility = View.VISIBLE
     }
 
     private fun showErrorConnection(errorMessage: String) {
-        rvTrack.visibility = View.GONE
+        hideMenuHistory()
         phLayoutError.visibility = View.VISIBLE
         pbSearch.visibility = View.GONE
         tvErrorSearch.text = errorMessage
@@ -201,7 +192,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showEmptyTrackList(emptyMessage: String) {
-        rvTrack.visibility = View.GONE
+        hideMenuHistory()
         phLayoutError.visibility = View.VISIBLE
         pbSearch.visibility = View.GONE
         tvErrorSearch.text = emptyMessage
@@ -209,7 +200,30 @@ class SearchActivity : AppCompatActivity() {
         ivErrorConnection.setImageResource(R.drawable.nothing_found)
     }
 
-    private fun showContent(tracks: ArrayList<TrackDto>) {
+    private fun showHistory() {
+        val tracks = viewModel.getTracksHistory()
+        if (tracks.isNotEmpty()) {
+            val searchSaved = mutableListOf<TrackSearchItem>()
+            val trackList = tracks.map { track ->
+                TrackMapper.mapToTrackSearchWithButton(track)
+            }
+            if (trackList.isNotEmpty()) {
+                searchSaved.addAll(trackList.asReversed())
+                searchSaved.add(TrackSearchItem.Button)
+            }
+            trackAdapter.setUpTracks(searchSaved)
+            tvYouSearched.visibility = View.VISIBLE
+            rvTrack.visibility = View.VISIBLE
+            phLayoutError.visibility = View.GONE
+            pbSearch.visibility = View.GONE
+        }
+        else{
+            hideMenuHistory()
+        }
+    }
+
+    private fun showContent(tracks: ArrayList<Track>) {
+        tvYouSearched.visibility = View.GONE
         rvTrack.visibility = View.VISIBLE
         phLayoutError.visibility = View.GONE
         pbSearch.visibility = View.GONE
