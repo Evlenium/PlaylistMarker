@@ -20,7 +20,11 @@ class AudioPlayerViewModel(private val playerInteractor: PlayerInteractor) :
         MutableLiveData<Int>()
     }
 
-    fun observePosition(): LiveData<Int> = positionLiveData
+    fun observePosition(): LiveData<Int> {
+        positionLiveData.value = getPlayerCurrentPosition()
+        return positionLiveData
+    }
+
     fun removeTimerPlayer() {
         mainThreadHandler.removeCallbacksAndMessages(null)
     }
@@ -56,7 +60,7 @@ class AudioPlayerViewModel(private val playerInteractor: PlayerInteractor) :
         return playerInteractor.getPlayerStateFlow()
     }
 
-    fun getPlayerCurrentPosition(): Int {
+    private fun getPlayerCurrentPosition(): Int {
         return playerInteractor.getPlayerCurrentPosition()
     }
 

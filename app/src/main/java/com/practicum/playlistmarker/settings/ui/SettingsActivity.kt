@@ -11,11 +11,13 @@ import com.practicum.playlistmarker.settings.presentation.SettingsViewModel
 import com.practicum.playlistmarker.settings.presentation.SettingsViewModelFactory
 
 class SettingsActivity : AppCompatActivity() {
+    private lateinit var settingsViewModel: SettingsViewModel
+    private lateinit var themeSwitcher: SwitchCompat
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val settingsViewModel =
+        settingsViewModel =
             ViewModelProvider(this, SettingsViewModelFactory(this))[SettingsViewModel::class.java]
 
         val toolbarSearch = findViewById<Toolbar>(R.id.toolbarSettings)
@@ -38,10 +40,20 @@ class SettingsActivity : AppCompatActivity() {
             settingsViewModel.openTerms()
         }
 
-        val themeSwitcher = findViewById<SwitchCompat>(R.id.swTheme)
+        themeSwitcher = findViewById(R.id.swTheme)
         themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
-            settingsViewModel.updateThemeSetting(checked)
+            onThemeChanged(checked)
         }
-        themeSwitcher.isChecked = settingsViewModel.getThemeSettings()
+        observeText()
+    }
+
+    private fun onThemeChanged(isDark: Boolean) {
+        settingsViewModel.onThemeChanged(isDark)
+    }
+
+    private fun observeText() {
+        settingsViewModel.observeThemeLiveData().observe(this) {
+            themeSwitcher.isChecked = it
+        }
     }
 }

@@ -27,7 +27,6 @@ import java.util.Locale
 class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var btPlay: ImageButton
     private lateinit var tvPreLength: TextView
-
     private lateinit var tvTrackName: TextView
     private lateinit var tvNameArtist: TextView
     private lateinit var tvAlbum: TextView
@@ -74,11 +73,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         tvLength = findViewById(R.id.tvLength)
 
         tvPreLength = findViewById(R.id.tvPrelength)
-        tvPreLength.text =
-            SimpleDateFormat(
-                "mm:ss",
-                Locale.getDefault()
-            ).format(audioPlayerViewModel.getPlayerCurrentPosition())
+        observeLengthComposition()
         parseTrackInfo(track)
     }
 
@@ -122,14 +117,20 @@ class AudioPlayerActivity : AppCompatActivity() {
         return object : Runnable {
             override fun run() {
                 if (audioPlayerViewModel.playerState == StatesPlayer.STATE_PLAYING) {
-                    tvPreLength.text = SimpleDateFormat(
-                        "mm:ss",
-                        Locale.getDefault()
-                    ).format(audioPlayerViewModel.getPlayerCurrentPosition())
-                    Log.d("MyLog", audioPlayerViewModel.getPlayerCurrentPosition().toString())
+                    observeLengthComposition()
                     audioPlayerViewModel.mainThreadHandler.postDelayed(this, DELAY_UPDATE)
                 }
             }
+        }
+    }
+
+    fun observeLengthComposition() {
+        audioPlayerViewModel.observePosition().observe(this) {
+            tvPreLength.text = SimpleDateFormat(
+                "mm:ss",
+                Locale.getDefault()
+            ).format(it)
+            Log.d("MyLog", it.toString())
         }
     }
 
