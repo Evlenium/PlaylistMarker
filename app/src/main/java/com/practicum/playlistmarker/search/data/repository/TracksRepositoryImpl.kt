@@ -1,6 +1,5 @@
 package com.practicum.playlistmarker.search.data.repository
 
-import com.practicum.playlistmarker.search.data.LocalStorageTrackHistory
 import com.practicum.playlistmarker.search.data.NetworkClient
 import com.practicum.playlistmarker.search.data.dto.TrackDto
 import com.practicum.playlistmarker.search.data.dto.TracksSearchRequest
@@ -10,7 +9,6 @@ import com.practicum.playlistmarker.util.Resource
 
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
-    private val localStorageTrackHistory: LocalStorageTrackHistory,
 ) : TracksRepository {
     override fun searchTracks(expression: String): Resource<List<TrackDto>> {
         val response = networkClient.doRequest(TracksSearchRequest(expression))
@@ -42,18 +40,4 @@ class TracksRepositoryImpl(
             }
         }
     }
-
-
-    override fun addTrackToHistory(item: TrackDto) {
-        localStorageTrackHistory.addTrackToHistory(item)
-    }
-
-    override fun clearHistory() {
-        localStorageTrackHistory.clearHistory()
-    }
-
-    override fun getTracksHistory(): MutableList<TrackDto> {
-        return localStorageTrackHistory.getSavedHistory()
-    }
-
 }

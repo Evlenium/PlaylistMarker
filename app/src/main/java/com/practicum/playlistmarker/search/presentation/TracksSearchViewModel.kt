@@ -7,30 +7,23 @@ import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.practicum.playlistmarker.R
 import com.practicum.playlistmarker.player.domain.model.Track
+import com.practicum.playlistmarker.search.domain.api.SearchHistoryInteractor
 import com.practicum.playlistmarker.search.domain.api.TracksInteractor
-import com.practicum.playlistmarker.util.Creator
 
-class TracksSearchViewModel(application: Application) : AndroidViewModel(application) {
+class TracksSearchViewModel(
+    application: Application,
+    private val tracksInteractor: TracksInteractor,
+    private val searchHistoryInteractor: SearchHistoryInteractor,
+) : AndroidViewModel(application) {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
-
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                TracksSearchViewModel(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application)
-            }
-        }
     }
 
     private val stateLiveData = MutableLiveData<TracksState>()
-
-    private val tracksInteractor = Creator.provideTracksInteractor(getApplication())
     private val handler = Handler(Looper.getMainLooper())
 
     fun observeState(): LiveData<TracksState> = stateLiveData
@@ -102,14 +95,14 @@ class TracksSearchViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun addToHistory(track: Track) {
-        tracksInteractor.addTrackToHistory(track)
+        searchHistoryInteractor.addTrackToHistory(track)
     }
 
     fun clearHistoryData() {
-        tracksInteractor.clearHistory()
+        searchHistoryInteractor.clearHistory()
     }
 
     fun getTracksHistory(): List<Track> {
-        return tracksInteractor.getTracksHistory()
+        return searchHistoryInteractor.getTracksHistory()
     }
 }

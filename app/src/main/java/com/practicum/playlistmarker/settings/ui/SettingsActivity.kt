@@ -5,20 +5,16 @@ import android.widget.ImageButton
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import androidx.lifecycle.ViewModelProvider
 import com.practicum.playlistmarker.R
 import com.practicum.playlistmarker.settings.presentation.SettingsViewModel
-import com.practicum.playlistmarker.settings.presentation.SettingsViewModelFactory
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
-    private lateinit var settingsViewModel: SettingsViewModel
     private lateinit var themeSwitcher: SwitchCompat
+    private val settingsViewModel by viewModel<SettingsViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
-        settingsViewModel =
-            ViewModelProvider(this, SettingsViewModelFactory(this))[SettingsViewModel::class.java]
 
         val toolbarSearch = findViewById<Toolbar>(R.id.toolbarSettings)
         toolbarSearch.setNavigationIcon(R.drawable.bt_arrow_back_mode)
