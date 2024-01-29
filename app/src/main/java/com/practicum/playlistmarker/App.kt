@@ -2,10 +2,20 @@ package com.practicum.playlistmarker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.practicum.playlistmarker.di.dataModule
+import com.practicum.playlistmarker.di.interactorModule
+import com.practicum.playlistmarker.di.repositoryModule
+import com.practicum.playlistmarker.di.viewModelModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class App : Application() {
     private var darkTheme = false
     override fun onCreate() {
+        startKoin {
+            androidContext(this@App)
+            modules(dataModule, repositoryModule, interactorModule, viewModelModule)
+        }
         instance = this
         val sharedPreferences =
             getSharedPreferences(EDIT_THEME, MODE_PRIVATE)

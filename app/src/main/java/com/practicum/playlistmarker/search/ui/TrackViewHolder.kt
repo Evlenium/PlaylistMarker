@@ -11,7 +11,7 @@ import com.practicum.playlistmarker.R
 import com.practicum.playlistmarker.search.presentation.model.TrackSearchItem
 import java.net.URL
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 
 class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -24,7 +24,8 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(item: TrackSearchItem.Track) {
         tvNameComposition.text = item.trackName
         tvNameCompositor.text = item.artistName
-        tvLengthComposition.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(item.trackTimeMillis.toLong())
+        tvLengthComposition.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(item.trackTimeMillis.toLong())
 
         val imageUrl = URL(item.artworkUrl100)
         Glide.with(icTrack)

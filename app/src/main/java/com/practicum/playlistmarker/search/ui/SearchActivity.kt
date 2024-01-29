@@ -18,7 +18,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmarker.App.Companion.TRACK
 import com.practicum.playlistmarker.R
@@ -29,6 +28,7 @@ import com.practicum.playlistmarker.search.presentation.TracksSearchViewModel
 import com.practicum.playlistmarker.search.presentation.TracksState
 import com.practicum.playlistmarker.search.presentation.model.TrackSearchItem
 import com.practicum.playlistmarker.search.ui.TrackAdapter.TrackClickListener
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
@@ -49,17 +49,10 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var tvErrorSearch: TextView
     private lateinit var ivErrorConnection: ImageView
-
-    private lateinit var viewModel: TracksSearchViewModel
-
+    private val viewModel by viewModel<TracksSearchViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        viewModel = ViewModelProvider(
-            this,
-            TracksSearchViewModel.getViewModelFactory()
-        )[TracksSearchViewModel::class.java]
 
         rvTrack = findViewById(R.id.rvTracks)
         tvYouSearched = findViewById(R.id.tvYouSearched)
@@ -136,8 +129,7 @@ class SearchActivity : AppCompatActivity() {
                     if (s.isNotEmpty()) {
                         inputTextFromSearch = s.toString()
                         viewModel.searchDebounce(inputTextFromSearch!!)
-                    }
-                    else if(inputEditTextSearch.hasFocus()&&s.isEmpty()){
+                    } else if (inputEditTextSearch.hasFocus() && s.isEmpty()) {
                         showHistory()
                     }
                 }
@@ -216,8 +208,7 @@ class SearchActivity : AppCompatActivity() {
             rvTrack.visibility = View.VISIBLE
             phLayoutError.visibility = View.GONE
             pbSearch.visibility = View.GONE
-        }
-        else{
+        } else {
             hideMenuHistory()
         }
     }

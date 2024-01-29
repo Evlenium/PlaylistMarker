@@ -1,7 +1,5 @@
 package com.practicum.playlistmarker.search.domain.use_case
 
-import com.practicum.playlistmarker.player.domain.model.Track
-import com.practicum.playlistmarker.search.data.dto.TrackDto
 import com.practicum.playlistmarker.search.domain.MapperDto
 import com.practicum.playlistmarker.search.domain.api.TracksInteractor
 import com.practicum.playlistmarker.search.domain.api.TracksRepository
@@ -29,20 +27,5 @@ class TracksInteractorImpl(private val repository: TracksRepository) : TracksInt
                 }
             }
         }
-    }
-
-    override fun addTrackToHistory(track: Track) {
-        repository.addTrackToHistory(MapperDto.mapToTrackFromTrackDto(track))
-    }
-
-    override fun clearHistory() {
-        repository.clearHistory()
-    }
-
-    override fun getTracksHistory(): List<Track> {
-        val trackList = repository.getTracksHistory().map { track ->
-            MapperDto.mapFromTrackToTrackDto(track)
-        }
-        return trackList
     }
 }

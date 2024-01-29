@@ -1,13 +1,13 @@
 package com.practicum.playlistmarker.player.data.repository
 
 import android.media.MediaPlayer
-import com.practicum.playlistmarker.player.domain.api.Player
+import com.practicum.playlistmarker.player.domain.api.PlayerRepository
 import com.practicum.playlistmarker.player.domain.model.StatesPlayer
 import com.practicum.playlistmarker.player.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class PlayerImpl(private val mediaPlayer: MediaPlayer) : Player {
+class PlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : PlayerRepository {
     private val playerState = MutableStateFlow(StatesPlayer.STATE_DEFAULT)
     override fun onPause() {
         pausePlayer()

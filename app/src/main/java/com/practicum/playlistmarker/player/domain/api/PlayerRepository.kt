@@ -4,7 +4,7 @@ import com.practicum.playlistmarker.player.domain.model.StatesPlayer
 import com.practicum.playlistmarker.player.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 
-interface Player {
+interface PlayerRepository {
     fun onPause()
     fun onDestroy()
     fun preparePlayer(track: Track)

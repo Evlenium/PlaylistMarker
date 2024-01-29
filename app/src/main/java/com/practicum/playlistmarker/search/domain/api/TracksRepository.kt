@@ -5,7 +5,4 @@ import com.practicum.playlistmarker.util.Resource
 
 interface TracksRepository {
     fun searchTracks(expression: String): Resource<List<TrackDto>>
-    fun addTrackToHistory(track: TrackDto)
-    fun clearHistory()
-    fun getTracksHistory(): MutableList<TrackDto>
 }

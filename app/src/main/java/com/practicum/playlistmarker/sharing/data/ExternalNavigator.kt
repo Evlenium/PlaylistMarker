@@ -12,11 +12,16 @@ class ExternalNavigator(val context: Context) {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, link)
             type = "text/plain"
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         })
     }
 
     fun openLink(link: String) {
-        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
+        context.startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(link)
+            ).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
     }
 
     fun openEmail(emailData: EmailData) {
@@ -29,12 +34,13 @@ class ExternalNavigator(val context: Context) {
             )
             .appendQueryParameter(context.getString(R.string.body), emailData.body)
             .build()
-        val emailIntent = Intent(Intent.ACTION_SENDTO, uri)
+        val emailIntent =
+            Intent(Intent.ACTION_SENDTO, uri)
         context.startActivity(
             Intent.createChooser(
                 emailIntent,
                 (context.getString(R.string.subject))
-            )
+            ).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
         )
     }
 }

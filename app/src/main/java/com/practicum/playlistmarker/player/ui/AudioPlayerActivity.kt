@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -17,10 +16,10 @@ import com.practicum.playlistmarker.App
 import com.practicum.playlistmarker.R
 import com.practicum.playlistmarker.player.domain.model.StatesPlayer
 import com.practicum.playlistmarker.player.presentation.AudioPlayerViewModel
-import com.practicum.playlistmarker.player.presentation.AudioPlayerViewModelFactory
 import com.practicum.playlistmarker.search.presentation.model.TrackSearchItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -36,7 +35,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var tvLength: TextView
     private lateinit var ivTrackImage: ImageView
 
-    private lateinit var audioPlayerViewModel: AudioPlayerViewModel
+    private val audioPlayerViewModel by viewModel<AudioPlayerViewModel>()
 
     val track by lazy(LazyThreadSafetyMode.NONE) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -49,8 +48,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_player)
-        audioPlayerViewModel =
-            ViewModelProvider(this, AudioPlayerViewModelFactory())[AudioPlayerViewModel::class.java]
+
 
         val toolbarMediaLibraryActivity = findViewById<Toolbar>(R.id.toolbarMediaLibraryActivity)
         toolbarMediaLibraryActivity.setNavigationIcon(R.drawable.bt_arrow_back_mode)
