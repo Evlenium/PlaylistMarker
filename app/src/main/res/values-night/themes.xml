@@ -24,13 +24,16 @@
         <item name="editor_search_color">@color/YPwhite</item>
         <item name="composition_name_search_color">@color/YPwhite</item>
         <item name="compositor_name_search_color">@color/YPwhite</item>
-        <!-- Base attributes media library. -->
-        <item name="background_media_color">@color/YPblack</item>
-        <item name="text_media_color">@color/YPwhite</item>
+        <!-- Base attributes audio player. -->
+        <item name="background_audio_player_color">@color/YPblack</item>
+        <item name="text_audio_player_color">@color/YPwhite</item>
         <item name="icon_like_color">@color/YPRed</item>
         <item name="icon_color">@color/YPwhite</item>
-        <item name="text_media_grey_color">@color/YPtextgray</item>
-        <item name="text_media_grey_color_icon">@color/YPGreyIcon</item>
+        <item name="text_audio_player_grey_color">@color/YPtextgray</item>
+        <item name="text_audio_player_grey_color_icon">@color/YPGreyIcon</item>
+        <!-- Base attributes media. -->
+        <item name="background_media_color">@color/YPblack</item>
+        <item name="text_media_color">@color/YPwhite</item>
     </style>
 
     <!-- Base style main. -->

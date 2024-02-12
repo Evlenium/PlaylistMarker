@@ -50,7 +50,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_audio_player)
 
 
-        val toolbarMediaLibraryActivity = findViewById<Toolbar>(R.id.toolbarMediaLibraryActivity)
+        val toolbarMediaLibraryActivity = findViewById<Toolbar>(R.id.toolbarAudioPlayer)
         toolbarMediaLibraryActivity.setNavigationIcon(R.drawable.bt_arrow_back_mode)
         toolbarMediaLibraryActivity.setNavigationOnClickListener { finish() }
         toolbarMediaLibraryActivity.setTitleTextAppearance(

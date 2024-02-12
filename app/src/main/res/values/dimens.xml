@@ -6,4 +6,7 @@
 
     <dimen name="margin_item_parent_audio_player">24dp</dimen>
     <dimen name="margin_items_audio_player">8dp</dimen>
+
+    <dimen name="padding_toolbar">4dp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
 </resources>
