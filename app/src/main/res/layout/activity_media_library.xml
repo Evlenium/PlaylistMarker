@@ -1,9 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/background_media_color"
+    android:orientation="vertical"
     tools:context=".media_library.ui.MediaLibraryActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Toolbar
+        android:id="@+id/toolbarMediaLibrary"
+        style="@style/TextToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:collapseIcon="@drawable/bt_arrow_back_mode"
+        android:title="@string/media" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_media_library"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:background="?attr/background_media_color"
+        android:textSize="@dimen/text_size_14"
+        app:tabIndicatorColor="?attr/text_media_color"
+        app:tabIndicatorFullWidth="true"
+        app:tabMode="fixed"
+        app:tabTextAppearance="@style/TabTextAppearance"
+        app:tabTextColor="?attr/text_media_color" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPagerMediaLibrary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
