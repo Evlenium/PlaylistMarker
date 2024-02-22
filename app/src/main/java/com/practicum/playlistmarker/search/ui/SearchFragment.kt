@@ -1,13 +1,14 @@
 package com.practicum.playlistmarker.search.ui
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -16,96 +17,90 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toolbar
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.practicum.playlistmarker.App.Companion.TRACK
 import com.practicum.playlistmarker.R
+import com.practicum.playlistmarker.databinding.FragmentSearchBinding
 import com.practicum.playlistmarker.player.domain.model.Track
-import com.practicum.playlistmarker.player.ui.AudioPlayerActivity
+import com.practicum.playlistmarker.player.ui.AudioPlayerFragment
 import com.practicum.playlistmarker.search.presentation.TrackMapper
 import com.practicum.playlistmarker.search.presentation.TracksSearchViewModel
 import com.practicum.playlistmarker.search.presentation.TracksState
 import com.practicum.playlistmarker.search.presentation.model.TrackSearchItem
-import com.practicum.playlistmarker.search.ui.TrackAdapter.TrackClickListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+
+class SearchFragment : Fragment() {
+    private var _binding: FragmentSearchBinding? = null
+    private val binding: FragmentSearchBinding
+        get() = _binding!!
 
     private var inputTextFromSearch: String? = null
-
     private var flagSuccessfulDownload: Boolean = false
-
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
+
     private lateinit var twSearch: TextWatcher
-    private lateinit var rvTrack: RecyclerView
-    private lateinit var tvYouSearched: TextView
+    private lateinit var recyclerViewTrack: RecyclerView
+    private lateinit var textViewYouSearched: TextView
     private lateinit var inputEditTextSearch: EditText
-    private lateinit var phLayoutError: LinearLayout
-    private lateinit var bUpdateSearch: Button
+    private lateinit var placeHolderLayoutError: LinearLayout
+    private lateinit var buttonUpdateSearch: Button
     private lateinit var trackAdapter: TrackAdapter
-    private lateinit var pbSearch: ProgressBar
+    private lateinit var progressBarSearch: ProgressBar
+    private lateinit var textViewErrorSearch: TextView
+    private lateinit var imageViewErrorConnection: ImageView
 
-    private lateinit var tvErrorSearch: TextView
-    private lateinit var ivErrorConnection: ImageView
     private val viewModel by viewModel<TracksSearchViewModel>()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
 
-        rvTrack = findViewById(R.id.rvTracks)
-        tvYouSearched = findViewById(R.id.tvYouSearched)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        inputEditTextSearch = findViewById(R.id.inputEditTextSearch)
-        val toolbarSearch = findViewById<Toolbar>(R.id.toolbarSearchActivity)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.apply {
+            textViewYouSearched = binding.tvYouSearched
+            inputEditTextSearch = binding.etSearch
+            placeHolderLayoutError = binding.phLayoutError
+            buttonUpdateSearch = binding.bUpdateSearch
+            textViewErrorSearch = binding.tvErrorSearch
+            imageViewErrorConnection = binding.ivErrorConnection
+            progressBarSearch = binding.pbSearch
+            recyclerViewTrack = binding.rvTracks
+            trackAdapter = TrackAdapter(mutableListOf())
+        }
 
-        phLayoutError = findViewById(R.id.phLayoutError)
-        bUpdateSearch = findViewById(R.id.bUpdateSearch)
-
-        tvErrorSearch = findViewById(R.id.tvErrorSearch)
-        ivErrorConnection = findViewById(R.id.ivErrorConnection)
-
-        pbSearch = findViewById(R.id.progressBarSearch)
-
-        trackAdapter = TrackAdapter(mutableListOf())
-
-        val trackClickListener = TrackClickListener {
+        val trackClickListener = TrackAdapter.TrackClickListener {
             if (clickDebounce()) {
                 val track = TrackMapper.mapToTrack(it)
                 viewModel.addToHistory(track)
-                val audioPlayerIntent = Intent(this, AudioPlayerActivity::class.java)
-                audioPlayerIntent.putExtra(TRACK, it)
-                startActivity(audioPlayerIntent)
+                findNavController().navigate(R.id.action_searchFragment_to_audioPlayerFragment,AudioPlayerFragment.createArgs(it))
             }
         }
+
         val buttonClearHistoryClickListener = TrackAdapter.ButtonClickListener {
             viewModel.clearHistoryData()
             hideMenuHistory()
         }
-
         trackAdapter =
             TrackAdapter(mutableListOf(), trackClickListener, buttonClearHistoryClickListener)
-
-        rvTrack.adapter = trackAdapter
+        recyclerViewTrack.adapter = trackAdapter
         showHistory()
 
-
-        toolbarSearch.setNavigationIcon(R.drawable.bt_arrow_back_mode)
-        toolbarSearch.setNavigationOnClickListener { finish() }
-        toolbarSearch.setTitleTextAppearance(
-            this,
-            R.style.SecondsActivityMediumTextAppearance
-        )
-
-        val clearTextSearchIcon = findViewById<ImageView>(R.id.clearTextSearchIcon)
-        clearTextSearchIcon.setOnClickListener {
+        binding.iClearText.setOnClickListener {
             inputEditTextSearch.setText("")
-            this.currentFocus?.let { view ->
+            activity?.window?.currentFocus?.let { view ->
                 val imm =
-                    getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                 imm?.hideSoftInputFromWindow(view.windowToken, 0)
-                phLayoutError.visibility = View.GONE
+                placeHolderLayoutError.isVisible = false
             }
         }
 
@@ -124,7 +119,7 @@ class SearchActivity : AppCompatActivity() {
                 before: Int,
                 count: Int,
             ) {
-                clearTextSearchIcon.visibility = clearButtonVisibility(s)
+                binding.iClearText.visibility = clearButtonVisibility(s)
                 if (s != null) {
                     if (s.isNotEmpty()) {
                         inputTextFromSearch = s.toString()
@@ -146,50 +141,49 @@ class SearchActivity : AppCompatActivity() {
                 }
                 true
             }
-            pbSearch.visibility = View.GONE
+            progressBarSearch.visibility = View.GONE
             false
         }
-        bUpdateSearch.setOnClickListener {
+        buttonUpdateSearch.setOnClickListener {
             if (inputTextFromSearch != null) {
                 viewModel.searchDebounce(inputTextFromSearch!!)
             }
         }
-
         inputEditTextSearch.setOnFocusChangeListener { view, hasFocus ->
             showHistory()
         }
-        viewModel.observeState().observe(this) {
+        viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
     }
 
     private fun hideMenuHistory() {
-        rvTrack.visibility = View.GONE
-        tvYouSearched.visibility = View.GONE
+        recyclerViewTrack.isVisible = false
+        textViewYouSearched.isVisible = false
     }
 
     private fun showLoading() {
         hideMenuHistory()
-        phLayoutError.visibility = View.GONE
-        pbSearch.visibility = View.VISIBLE
+        placeHolderLayoutError.isVisible = false
+        buttonUpdateSearch.isVisible = true
     }
 
     private fun showErrorConnection(errorMessage: String) {
         hideMenuHistory()
-        phLayoutError.visibility = View.VISIBLE
-        pbSearch.visibility = View.GONE
-        tvErrorSearch.text = errorMessage
-        bUpdateSearch.visibility = View.VISIBLE
-        ivErrorConnection.setImageResource(R.drawable.ph_internet_error)
+        placeHolderLayoutError.isVisible = true
+        progressBarSearch.isVisible = false
+        textViewErrorSearch.text = errorMessage
+        buttonUpdateSearch.isVisible = true
+        imageViewErrorConnection.setImageResource(R.drawable.ph_internet_error)
     }
 
     private fun showEmptyTrackList(emptyMessage: String) {
         hideMenuHistory()
-        phLayoutError.visibility = View.VISIBLE
-        pbSearch.visibility = View.GONE
-        tvErrorSearch.text = emptyMessage
-        bUpdateSearch.visibility = View.GONE
-        ivErrorConnection.setImageResource(R.drawable.nothing_found)
+        placeHolderLayoutError.isVisible = true
+        progressBarSearch.isVisible = false
+        textViewErrorSearch.text = emptyMessage
+        buttonUpdateSearch.isVisible = false
+        imageViewErrorConnection.setImageResource(R.drawable.nothing_found)
     }
 
     private fun showHistory() {
@@ -204,20 +198,20 @@ class SearchActivity : AppCompatActivity() {
                 searchSaved.add(TrackSearchItem.Button)
             }
             trackAdapter.setUpTracks(searchSaved)
-            tvYouSearched.visibility = View.VISIBLE
-            rvTrack.visibility = View.VISIBLE
-            phLayoutError.visibility = View.GONE
-            pbSearch.visibility = View.GONE
+            textViewYouSearched.isVisible = true
+            recyclerViewTrack.isVisible = true
+            placeHolderLayoutError.isVisible = false
+            progressBarSearch.isVisible = false
         } else {
             hideMenuHistory()
         }
     }
 
     private fun showContent(tracks: ArrayList<Track>) {
-        tvYouSearched.visibility = View.GONE
-        rvTrack.visibility = View.VISIBLE
-        phLayoutError.visibility = View.GONE
-        pbSearch.visibility = View.GONE
+        textViewYouSearched.isVisible = false
+        recyclerViewTrack.isVisible = true
+        placeHolderLayoutError.isVisible = false
+        progressBarSearch.isVisible = false
         val trackList = tracks.map { track ->
             TrackMapper.mapToTrackSearchItem(track)
         }
@@ -242,16 +236,6 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(INPUT_TEXT_SEARCH, inputTextFromSearch)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        inputTextFromSearch = savedInstanceState.getString(INPUT_TEXT_SEARCH, "")
-    }
-
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
@@ -261,8 +245,12 @@ class SearchActivity : AppCompatActivity() {
         return current
     }
 
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
     companion object {
-        const val INPUT_TEXT_SEARCH = "INPUT_TEXT_SEARCH"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

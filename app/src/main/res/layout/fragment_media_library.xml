@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/background_media_color"
     android:orientation="vertical"
-    tools:context=".media_library.ui.MediaLibraryActivity">
+    tools:context=".media_library.ui.MediaLibraryFragment">
 
     <Toolbar
         android:id="@+id/toolbarMediaLibrary"

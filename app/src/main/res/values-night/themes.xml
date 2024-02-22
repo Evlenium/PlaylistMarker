@@ -34,6 +34,10 @@
         <!-- Base attributes media. -->
         <item name="background_media_color">@color/YPblack</item>
         <item name="text_media_color">@color/YPwhite</item>
+        <!-- Base attributes bottom navigation. -->
+        <item name="background_bottom_navigation">@color/YPblack</item>
+        <item name="text_navigation_color">@color/YPwhite</item>
+        <item name="select_text_navigation_color">@color/YPblue</item>
     </style>
 
     <!-- Base style main. -->
