@@ -2,6 +2,7 @@ package com.practicum.playlistmarker.root.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.practicum.playlistmarker.R
@@ -11,7 +12,6 @@ class RootActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRootBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_root)
 
         binding = ActivityRootBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -21,5 +21,17 @@ class RootActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         binding.bottomNavigationView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.audioPlayerFragment -> {
+                    binding.bottomNavigationView.isVisible = false
+                }
+
+                else -> {
+                    binding.bottomNavigationView.isVisible = true
+                }
+            }
+        }
     }
 }

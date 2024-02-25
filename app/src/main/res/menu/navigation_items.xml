@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/search"
+        android:id="@+id/searchFragment"
         android:icon="@drawable/search"
         android:title="@string/search" />
 
     <item
-        android:id="@+id/mediaLibrary"
+        android:id="@+id/mediaLibraryFragment"
         android:icon="@drawable/medialibrary"
         android:title="@string/media" />
 
     <item
-        android:id="@+id/settings"
+        android:id="@+id/settingsFragment"
         android:icon="@drawable/settings"
         android:title="@string/settings" />
 </menu>

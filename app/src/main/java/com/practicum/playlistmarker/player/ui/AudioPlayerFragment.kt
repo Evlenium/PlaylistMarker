@@ -92,12 +92,14 @@ class AudioPlayerFragment : Fragment() {
     }
 
     private fun observeLengthComposition() {
-        audioPlayerViewModel.observePosition().observe(viewLifecycleOwner) {
-            binding.tvPrelength.text = SimpleDateFormat(
-                "mm:ss",
-                Locale.getDefault()
-            ).format(it)
-            Log.d("MyLog", it.toString())
+        if (view!=null){
+            audioPlayerViewModel.observePosition().observe(viewLifecycleOwner) {
+                binding.tvPrelength.text = SimpleDateFormat(
+                    "mm:ss",
+                    Locale.getDefault()
+                ).format(it)
+                Log.d("MyLog", it.toString())
+            }
         }
     }
 

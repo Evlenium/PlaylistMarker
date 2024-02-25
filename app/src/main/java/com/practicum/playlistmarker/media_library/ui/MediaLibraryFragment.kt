@@ -32,7 +32,7 @@ class MediaLibraryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.viewPagerMediaLibrary.adapter = FavoritesTracklistsViewPagerAdapter(
-            parentFragmentManager,
+            childFragmentManager,
             lifecycle
         )
 
@@ -48,8 +48,8 @@ class MediaLibraryFragment : Fragment() {
         tabMediator.attach()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
         tabMediator.detach()
     }
