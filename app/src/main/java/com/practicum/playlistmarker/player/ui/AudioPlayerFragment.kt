@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmarker.R
@@ -48,6 +49,14 @@ class AudioPlayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.toolbarAudioPlayer.apply {
+            setNavigationIcon(R.drawable.bt_arrow_back_mode)
+            setNavigationOnClickListener { findNavController().popBackStack() }
+            setTitleTextAppearance(
+                requireContext(),
+                R.style.SecondsActivityMediumTextAppearance
+            )
+        }
         observeLengthComposition()
         parseTrackInfo(track)
     }
@@ -92,7 +101,7 @@ class AudioPlayerFragment : Fragment() {
     }
 
     private fun observeLengthComposition() {
-        if (view!=null){
+        if (view != null) {
             audioPlayerViewModel.observePosition().observe(viewLifecycleOwner) {
                 binding.tvPrelength.text = SimpleDateFormat(
                     "mm:ss",

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.practicum.playlistmarker.R
 import com.practicum.playlistmarker.databinding.FragmentSettingsBinding
 import com.practicum.playlistmarker.settings.presentation.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -39,6 +40,10 @@ class SettingsFragment : Fragment() {
             swTheme.setOnCheckedChangeListener { switcher, checked ->
                 onThemeChanged(checked)
             }
+            toolbarSettings.setTitleTextAppearance(
+                requireContext(),
+                R.style.SecondsActivityMediumTextAppearance
+            )
         }
         observeText()
     }
