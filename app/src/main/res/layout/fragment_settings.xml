@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/background_settings_color"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".settings.ui.SettingsFragment">
 
     <Toolbar
         android:id="@+id/toolbarSettings"
         style="@style/TextToolbar"
         android:collapseIcon="@drawable/bt_arrow_back_mode"
-        android:title="@string/settings">
-    </Toolbar>
+        android:title="@string/settings"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp">
+
         <TextView
             style="@style/TextMenuSettings"
             android:text="@string/black_theme" />
+
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/swTheme"
             android:layout_width="wrap_content"
@@ -40,8 +43,8 @@
             android:text="@string/share_app" />
 
         <ImageButton
-            style="@style/IconMenuSettings"
             android:id="@+id/buttonShareApplication"
+            style="@style/IconMenuSettings"
             android:src="@drawable/bt_send_mode" />
 
     </LinearLayout>
@@ -56,8 +59,8 @@
             android:text="@string/write_to_support" />
 
         <ImageButton
-            style="@style/IconMenuSettings"
             android:id="@+id/buttonSupport"
+            style="@style/IconMenuSettings"
             android:src="@drawable/bt_support_mode" />
     </LinearLayout>
 
@@ -71,8 +74,8 @@
             android:text="@string/terms_of_use" />
 
         <ImageButton
-            style="@style/IconMenuSettings"
             android:id="@+id/buttonTermsOfUse"
+            style="@style/IconMenuSettings"
             android:src="@drawable/move_mode" />
     </LinearLayout>
 </LinearLayout>

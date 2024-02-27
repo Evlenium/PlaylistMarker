@@ -1,33 +1,41 @@
 package com.practicum.playlistmarker.media_library.ui
 
 import android.os.Bundle
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.practicum.playlistmarker.R
-import com.practicum.playlistmarker.databinding.ActivityMediaLibraryBinding
+import com.practicum.playlistmarker.databinding.FragmentMediaLibraryBinding
 import com.practicum.playlistmarker.media_library.presentation.MediaLibraryViewModel
-import com.practicum.playlistmarker.player.presentation.AudioPlayerViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MediaLibraryActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMediaLibraryBinding
+class MediaLibraryFragment : Fragment() {
+    private var _binding: FragmentMediaLibraryBinding? = null
+    private val binding: FragmentMediaLibraryBinding
+        get() = _binding!!
+
     private lateinit var tabMediator: TabLayoutMediator
     private val mediaLibraryViewModel by viewModel<MediaLibraryViewModel>()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMediaLibraryBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        binding.toolbarMediaLibrary.setNavigationIcon(R.drawable.bt_arrow_back_mode)
-        binding.toolbarMediaLibrary.setNavigationOnClickListener { finish() }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        _binding = FragmentMediaLibraryBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.toolbarMediaLibrary.setTitleTextAppearance(
-            this,
+            requireContext(),
             R.style.SecondsActivityMediumTextAppearance
         )
-
         binding.viewPagerMediaLibrary.adapter = FavoritesTracklistsViewPagerAdapter(
-            supportFragmentManager,
+            childFragmentManager,
             lifecycle
         )
 
@@ -43,8 +51,9 @@ class MediaLibraryActivity : AppCompatActivity() {
         tabMediator.attach()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
         tabMediator.detach()
     }
 }

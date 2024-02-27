@@ -33,10 +33,17 @@
     <attr name="text_audio_player_grey_color" />
     <attr name="text_audio_player_grey_color_icon" />
 
+    <!-- Base attributes media library. -->
     <attr name="background_media_color" />
     <attr name="text_media_color" />
     <attr name="text_media_grey_color" />
     <attr name="text_media_grey_color_icon" />
+
+    <!-- Base attributes bottom navigation. -->
+    <attr name="background_bottom_navigation" />
+    <attr name="text_navigation_color" />
+    <attr name="select_text_navigation_color" />
+
 
     <!-- Base application theme. -->
     <style name="Base.Theme.PlaylistMarker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -72,6 +79,25 @@
         <!-- Base attributes media. -->
         <item name="background_media_color">@color/YPwhite</item>
         <item name="text_media_color">@color/YPblack</item>
+        <!-- Base attributes bottom navigation. -->
+        <item name="background_bottom_navigation">@color/YPwhite</item>
+        <item name="text_navigation_color">@color/YPblack</item>
+        <item name="select_text_navigation_color">@color/YPblue</item>
+    </style>
+
+    <!-- Base attributes bottom navigation view. -->
+    <style name="BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:background">?attr/background_bottom_navigation</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="itemTextColor">@drawable/selector_bottom_navigation</item>
+        <item name="itemIconTint">@drawable/selector_bottom_navigation</item>
+        <item name="enforceMaterialTheme">false</item>
+        <item name="enforceTextAppearance">false</item>
+        <item name="compatShadowEnabled">false</item>
+        <item name="itemRippleColor">@null</item>
     </style>
 
     <!-- Base style main. -->

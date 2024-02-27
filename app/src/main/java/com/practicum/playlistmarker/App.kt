@@ -40,9 +40,7 @@ class App : Application() {
     }
 
     companion object {
-        const val TRACK = "track"
         const val EDIT_THEME = "key_for_edit_theme"
-        const val TRACKS_LIST_KEY = "key_for_tracks_list"
         lateinit var instance: App private set
     }
 }
