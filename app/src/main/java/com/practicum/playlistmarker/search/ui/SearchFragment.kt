@@ -2,8 +2,6 @@ package com.practicum.playlistmarker.search.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -19,6 +17,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmarker.R
@@ -29,6 +28,8 @@ import com.practicum.playlistmarker.search.presentation.TrackMapper
 import com.practicum.playlistmarker.search.presentation.TracksSearchViewModel
 import com.practicum.playlistmarker.search.presentation.TracksState
 import com.practicum.playlistmarker.search.presentation.model.TrackSearchItem
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -39,8 +40,6 @@ class SearchFragment : Fragment() {
 
     private var inputTextFromSearch: String? = null
     private var flagSuccessfulDownload: Boolean = false
-    private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
 
     private lateinit var twSearch: TextWatcher
     private lateinit var recyclerViewTrack: RecyclerView
@@ -65,6 +64,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.apply {
             textViewYouSearched = binding.tvYouSearched
             inputEditTextSearch = binding.etSearch
@@ -81,11 +81,28 @@ class SearchFragment : Fragment() {
             )
         }
 
+        var isClickAllowed = true
+
+        fun clickDebounce(): Boolean {
+            val current = isClickAllowed
+            if (isClickAllowed) {
+                isClickAllowed = false
+                viewLifecycleOwner.lifecycleScope.launch {
+                    delay(CLICK_DEBOUNCE_DELAY)
+                    isClickAllowed = true
+                }
+            }
+            return current
+        }
+
         val trackClickListener = TrackAdapter.TrackClickListener {
             if (clickDebounce()) {
                 val track = TrackMapper.mapToTrack(it)
                 viewModel.addToHistory(track)
-                findNavController().navigate(R.id.action_searchFragment_to_audioPlayerFragment,AudioPlayerFragment.createArgs(it))
+                findNavController().navigate(
+                    R.id.action_searchFragment_to_audioPlayerFragment,
+                    AudioPlayerFragment.createArgs(it)
+                )
             }
         }
 
@@ -169,7 +186,8 @@ class SearchFragment : Fragment() {
     private fun showLoading() {
         hideMenuHistory()
         placeHolderLayoutError.isVisible = false
-        buttonUpdateSearch.isVisible = true
+        buttonUpdateSearch.isVisible = false
+        progressBarSearch.isVisible = true
     }
 
     private fun showErrorConnection(errorMessage: String) {
@@ -240,14 +258,6 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
-    }
 
     override fun onDestroyView() {
         _binding = null

@@ -83,26 +83,15 @@ class AudioPlayerFragment : Fragment() {
             lifecycleScope.launch(Dispatchers.Main) {
                 audioPlayerViewModel.getPlayerStateFlow().collect { playerState ->
                     audioPlayerViewModel.playerState = playerState
-                    audioPlayerViewModel.mainThreadHandler.post { checkState(playerState) }
-                }
-            }
-        }
-    }
-
-    private fun createUpdateTimerTask(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                if (audioPlayerViewModel.playerState == StatesPlayer.STATE_PLAYING) {
-                    observeLengthComposition()
-                    audioPlayerViewModel.mainThreadHandler.postDelayed(this, DELAY_UPDATE)
+                    checkState(playerState)
                 }
             }
         }
     }
 
     private fun observeLengthComposition() {
-        if (view != null) {
-            audioPlayerViewModel.observePosition().observe(viewLifecycleOwner) {
+        audioPlayerViewModel.observePosition().observe(viewLifecycleOwner) {
+            if (audioPlayerViewModel.playerState == StatesPlayer.STATE_PLAYING) {
                 binding.tvPrelength.text = SimpleDateFormat(
                     "mm:ss",
                     Locale.getDefault()
@@ -115,14 +104,13 @@ class AudioPlayerFragment : Fragment() {
     private fun checkState(playerState: StatesPlayer) {
         when (playerState) {
             StatesPlayer.STATE_PLAYING -> {
-                audioPlayerViewModel.mainThreadHandler.post(createUpdateTimerTask())
+                observeLengthComposition()
                 audioPlayerViewModel.startPlayer()
                 binding.btPlay.setImageResource(R.drawable.bt_paused)
             }
 
             StatesPlayer.STATE_PREPARED -> {
                 binding.btPlay.setImageResource(R.drawable.bt_play)
-                audioPlayerViewModel.removeTimerPlayer()
                 binding.tvPrelength.text = resources.getString(R.string.fixed_time_track)
             }
 
@@ -132,7 +120,7 @@ class AudioPlayerFragment : Fragment() {
             }
 
             StatesPlayer.STATE_DEFAULT -> {
-
+                binding.tvPrelength.text = resources.getString(R.string.fixed_time_track)
             }
         }
     }
@@ -153,7 +141,6 @@ class AudioPlayerFragment : Fragment() {
     }
 
     companion object {
-        private const val DELAY_UPDATE = 300L
         private const val ARGS_TRACK_ID = "track_id"
 
         fun createArgs(trackId: TrackSearchItem.Track): Bundle =
