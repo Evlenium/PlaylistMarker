@@ -72,7 +72,12 @@ class AudioPlayerFragment : Fragment() {
                 tvTrackName.text = track.trackName
                 tvNameArtist.text = track.artistName
                 tvAlbum.text = track.collectionName
-                tvYear.text = track.dateYearFormat
+                if (track.releaseDate!=null) {
+                    tvYear.text = track.dateYearFormat
+                }
+                else{
+                    tvYear.text = ""
+                }
                 tvGenre.text = track.primaryGenreName
                 tvCountry.text = track.country
                 tvLength.text = track.trackTimeFormat
