@@ -4,19 +4,33 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.practicum.playlistmarker.media_library.domain.db.api.FavoriteInteractor
 import com.practicum.playlistmarker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmarker.player.domain.model.StatesPlayer
+import com.practicum.playlistmarker.player.domain.model.Track
 import com.practicum.playlistmarker.search.presentation.model.TrackSearchItem
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class AudioPlayerViewModel(private val playerInteractor: PlayerInteractor) :
+class AudioPlayerViewModel(
+    private val playerInteractor: PlayerInteractor,
+    private val favoriteInteractor: FavoriteInteractor,
+) :
     ViewModel() {
     var playerState = StatesPlayer.STATE_DEFAULT
     private lateinit var url: String
     private var timerJob: Job? = null
+
+    private val favoriteLiveData: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
+
+    fun observeFavoriteLiveData(track: Track): LiveData<Boolean> {
+        favoriteLiveData.value = track.isFavorite
+        return favoriteLiveData
+    }
 
     private val positionLiveData: MutableLiveData<Int> by lazy {
         MutableLiveData<Int>()
@@ -25,7 +39,7 @@ class AudioPlayerViewModel(private val playerInteractor: PlayerInteractor) :
     fun observePosition(): LiveData<Int> {
         timerJob = viewModelScope.launch {
             while (playerState == StatesPlayer.STATE_PLAYING) {
-                delay(DELAY_UPDATE)
+                delay(DELAY_UPDATE_MILLIS)
                 positionLiveData.value = getPlayerCurrentPosition()
             }
         }
@@ -34,7 +48,7 @@ class AudioPlayerViewModel(private val playerInteractor: PlayerInteractor) :
 
     fun preparePlayer(track: TrackSearchItem.Track?) {
         if (track != null) {
-            if (track.previewUrl!=null){
+            if (track.previewUrl != null) {
                 url = track.previewUrl
                 val trackItem = PlayerMapper.mapToTrackForPlayer(track)
                 playerInteractor.preparePlayer(trackItem)
@@ -67,7 +81,20 @@ class AudioPlayerViewModel(private val playerInteractor: PlayerInteractor) :
         playerInteractor.reset()
     }
 
+    fun onFavoriteClicked(track: Track) {
+        viewModelScope.launch {
+            if (track.isFavorite) {
+                favoriteInteractor.deleteTrack(track)
+                track.isFavorite = false
+            } else {
+                favoriteInteractor.addTrack(track)
+                track.isFavorite = true
+            }
+        }
+
+    }
+
     companion object {
-        private const val DELAY_UPDATE = 300L
+        private const val DELAY_UPDATE_MILLIS = 300L
     }
 }

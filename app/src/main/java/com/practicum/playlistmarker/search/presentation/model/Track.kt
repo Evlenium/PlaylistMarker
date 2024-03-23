@@ -22,6 +22,7 @@ sealed class TrackSearchItem {
         val primaryGenreName: String,
         val country: String,
         val previewUrl: String?,
+        val isFavorite:Boolean
     ) : TrackSearchItem(), Parcelable {
 
         @IgnoredOnParcel

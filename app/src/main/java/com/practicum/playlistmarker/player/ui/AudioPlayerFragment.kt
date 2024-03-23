@@ -17,6 +17,7 @@ import com.practicum.playlistmarker.R
 import com.practicum.playlistmarker.databinding.FragmentAudioPlayerBinding
 import com.practicum.playlistmarker.player.domain.model.StatesPlayer
 import com.practicum.playlistmarker.player.presentation.AudioPlayerViewModel
+import com.practicum.playlistmarker.search.presentation.TrackMapper
 import com.practicum.playlistmarker.search.presentation.model.TrackSearchItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -72,10 +73,9 @@ class AudioPlayerFragment : Fragment() {
                 tvTrackName.text = track.trackName
                 tvNameArtist.text = track.artistName
                 tvAlbum.text = track.collectionName
-                if (track.releaseDate!=null) {
+                if (track.releaseDate != null) {
                     tvYear.text = track.dateYearFormat
-                }
-                else{
+                } else {
                     tvYear.text = ""
                 }
                 tvGenre.text = track.primaryGenreName
@@ -89,6 +89,19 @@ class AudioPlayerFragment : Fragment() {
                 audioPlayerViewModel.getPlayerStateFlow().collect { playerState ->
                     audioPlayerViewModel.playerState = playerState
                     checkState(playerState)
+                }
+            }
+            btLike.setOnClickListener {
+                val trackTmp = TrackMapper.mapToTrack(track!!)
+                audioPlayerViewModel.apply {
+                    onFavoriteClicked(trackTmp)
+                    observeFavoriteLiveData(trackTmp).observe(viewLifecycleOwner) { isFavorite ->
+                        if (isFavorite) {
+                            btLike.setImageResource(R.drawable.bt_red_like)
+                        } else {
+                            btLike.setImageResource(R.drawable.bt_like)
+                        }
+                    }
                 }
             }
         }

@@ -84,14 +84,16 @@ class TracksSearchViewModel(
     }
 
     fun addToHistory(track: Track) {
-        searchHistoryInteractor.addTrackToHistory(track)
+        viewModelScope.launch{
+            searchHistoryInteractor.addTrackToHistory(track)
+        }
     }
 
     fun clearHistoryData() {
         searchHistoryInteractor.clearHistory()
     }
 
-    fun getTracksHistory(): List<Track> {
+    suspend fun getTracksHistory(): List<Track> {
         return searchHistoryInteractor.getTracksHistory()
     }
 }
