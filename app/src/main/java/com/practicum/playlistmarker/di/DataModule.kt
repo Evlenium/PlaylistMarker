@@ -2,7 +2,9 @@ package com.practicum.playlistmarker.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.room.Room
 import com.google.gson.Gson
+import com.practicum.playlistmarker.media_library.data.db.AppDatabase
 import com.practicum.playlistmarker.search.data.NetworkClient
 import com.practicum.playlistmarker.search.data.network.RetrofitNetworkClient
 import com.practicum.playlistmarker.search.data.network.iTunesApi
@@ -44,14 +46,12 @@ val dataModule = module {
 
     single<LocalSearchHistoryStorage> {
         val sharedTracklist: SharedPreferences by inject(qualifier = named(TRACKS_LIST_KEY))
-        LocalSearchHistoryStorage(sharedTracklist, get())
+        LocalSearchHistoryStorage(sharedTracklist, get(), get())
     }
 
     single<NetworkClient> {
         RetrofitNetworkClient(get(), androidContext())
     }
-
-
 
     single(named(EDIT_THEME)) {
         androidContext().getSharedPreferences(EDIT_THEME, Context.MODE_PRIVATE)
@@ -60,5 +60,10 @@ val dataModule = module {
     single<LocalStorageThemeApp> {
         val sharedTheme: SharedPreferences by inject(qualifier = named(EDIT_THEME))
         LocalStorageThemeApp(sharedTheme)
+    }
+
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .build()
     }
 }

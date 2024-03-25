@@ -104,6 +104,7 @@ class SearchFragment : Fragment() {
                     AudioPlayerFragment.createArgs(it)
                 )
             }
+
         }
 
         val buttonClearHistoryClickListener = TrackAdapter.ButtonClickListener {
@@ -209,24 +210,27 @@ class SearchFragment : Fragment() {
     }
 
     private fun showHistory() {
-        val tracks = viewModel.getTracksHistory()
-        if (tracks.isNotEmpty()) {
-            val searchSaved = mutableListOf<TrackSearchItem>()
-            val trackList = tracks.map { track ->
-                TrackMapper.mapToTrackSearchWithButton(track)
+        lifecycleScope.launch {
+            val tracks = viewModel.getTracksHistory()
+            if (tracks.isNotEmpty()) {
+                val searchSaved = mutableListOf<TrackSearchItem>()
+                val trackList = tracks.map { track ->
+                    TrackMapper.mapToTrackSearchWithButton(track)
+                }
+                if (trackList.isNotEmpty()) {
+                    searchSaved.addAll(trackList.asReversed())
+                    searchSaved.add(TrackSearchItem.Button)
+                }
+                trackAdapter.setUpTracks(searchSaved)
+                textViewYouSearched.isVisible = true
+                recyclerViewTrack.isVisible = true
+                placeHolderLayoutError.isVisible = false
+                progressBarSearch.isVisible = false
+            } else {
+                hideMenuHistory()
             }
-            if (trackList.isNotEmpty()) {
-                searchSaved.addAll(trackList.asReversed())
-                searchSaved.add(TrackSearchItem.Button)
-            }
-            trackAdapter.setUpTracks(searchSaved)
-            textViewYouSearched.isVisible = true
-            recyclerViewTrack.isVisible = true
-            placeHolderLayoutError.isVisible = false
-            progressBarSearch.isVisible = false
-        } else {
-            hideMenuHistory()
         }
+
     }
 
     private fun showContent(tracks: ArrayList<Track>) {

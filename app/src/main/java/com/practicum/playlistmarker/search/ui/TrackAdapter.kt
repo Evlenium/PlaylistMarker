@@ -8,13 +8,22 @@ import com.practicum.playlistmarker.search.presentation.model.TrackSearchItem
 
 class TrackAdapter(
     private var data: List<TrackSearchItem>,
-    private val clickListener: TrackClickListener?,
+    private var clickListener: TrackClickListener?,
     private val buttonClickListener: ButtonClickListener?,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     constructor(data: List<TrackSearchItem>) : this(data, null, null) {
         this.data = data
+    }
+
+    constructor(data: List<TrackSearchItem>, clickListener: TrackClickListener) : this(
+        data,
+        clickListener,
+        null
+    ) {
+        this.data = data
+        this.clickListener = clickListener
     }
 
     fun setUpTracks(tracks: List<TrackSearchItem>) {

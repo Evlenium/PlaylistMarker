@@ -1,8 +1,12 @@
 package com.practicum.playlistmarker.di
 
 import android.media.MediaPlayer
+import com.practicum.playlistmarker.media_library.data.converters.TrackDbConvertor
+import com.practicum.playlistmarker.media_library.data.repository.FavoriteRepositoryImpl
+import com.practicum.playlistmarker.media_library.domain.db.api.FavoriteRepository
 import com.practicum.playlistmarker.player.data.repository.PlayerRepositoryImpl
 import com.practicum.playlistmarker.player.domain.api.PlayerRepository
+import com.practicum.playlistmarker.search.data.converters.TrackFavoriteConvertorFromDatabase
 import com.practicum.playlistmarker.search.data.repository.LocalSearchHistoryStorage
 import com.practicum.playlistmarker.search.data.repository.TracksRepositoryImpl
 import com.practicum.playlistmarker.search.domain.api.SearchHistoryStorage
@@ -16,11 +20,11 @@ import org.koin.dsl.module
 val repositoryModule = module {
 
     single<TracksRepository> {
-        TracksRepositoryImpl(get())
+        TracksRepositoryImpl(get(), get())
     }
 
     single<SearchHistoryStorage> {
-        LocalSearchHistoryStorage(get(), get())
+        LocalSearchHistoryStorage(get(), get(), get())
     }
 
     single<PlayerRepository> {
@@ -38,4 +42,12 @@ val repositoryModule = module {
     single<ResourceProvider> {
         ResourceProvider(get())
     }
+
+    factory { TrackDbConvertor() }
+
+    single<FavoriteRepository> {
+        FavoriteRepositoryImpl(get(), get())
+    }
+
+    factory { TrackFavoriteConvertorFromDatabase(get()) }
 }
