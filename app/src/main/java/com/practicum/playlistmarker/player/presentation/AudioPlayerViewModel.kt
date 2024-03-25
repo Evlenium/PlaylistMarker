@@ -8,6 +8,7 @@ import com.practicum.playlistmarker.media_library.domain.db.api.FavoriteInteract
 import com.practicum.playlistmarker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmarker.player.domain.model.StatesPlayer
 import com.practicum.playlistmarker.player.domain.model.Track
+import com.practicum.playlistmarker.search.presentation.model.StateFavorite
 import com.practicum.playlistmarker.search.presentation.model.TrackSearchItem
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -20,17 +21,12 @@ class AudioPlayerViewModel(
 ) :
     ViewModel() {
     var playerState = StatesPlayer.STATE_DEFAULT
+    private val stateFavoriteLiveData = MutableLiveData<StateFavorite>()
+
     private lateinit var url: String
     private var timerJob: Job? = null
 
-    private val favoriteLiveData: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
-    }
-
-    fun observeFavoriteLiveData(track: Track): LiveData<Boolean> {
-        favoriteLiveData.value = track.isFavorite
-        return favoriteLiveData
-    }
+    fun observeFavoriteState(): LiveData<StateFavorite> = stateFavoriteLiveData
 
     private val positionLiveData: MutableLiveData<Int> by lazy {
         MutableLiveData<Int>()
@@ -85,13 +81,16 @@ class AudioPlayerViewModel(
         viewModelScope.launch {
             if (track.isFavorite) {
                 favoriteInteractor.deleteTrack(track)
-                track.isFavorite = false
+                renderState(StateFavorite.NotFavorite)
             } else {
                 favoriteInteractor.addTrack(track)
-                track.isFavorite = true
+                renderState(StateFavorite.Favorite)
             }
         }
+    }
 
+    private fun renderState(state: StateFavorite) {
+        stateFavoriteLiveData.postValue(state)
     }
 
     companion object {

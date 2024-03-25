@@ -13,7 +13,7 @@ class FavoritesViewModel(private val favoriteInteractor: FavoriteInteractor) : V
     private val favoriteStateLiveData = MutableLiveData<FavoriteState>()
     fun observeFavoriteState(): LiveData<FavoriteState> = favoriteStateLiveData
 
-    init {
+    fun fillData() {
         viewModelScope.launch {
             favoriteInteractor.getFavoriteTracks().collect { trackList ->
                 processResult(trackList)
@@ -21,13 +21,16 @@ class FavoritesViewModel(private val favoriteInteractor: FavoriteInteractor) : V
         }
     }
 
-    private fun processResult(trackList: List<Track>): List<Track>? {
-        return if (trackList.isEmpty()) {
-            favoriteStateLiveData.postValue(FavoriteState.STATE_LIST_IS_EMPTY)
-            trackList
-        } else {
-            favoriteStateLiveData.postValue(FavoriteState.STATE_LIST_IS_FULL)
-            null
+    private fun processResult(trackList: List<Track>) {
+        if (trackList.isNotEmpty()) {
+            renderState(FavoriteState.Content(trackList))
         }
+        else{
+            renderState(FavoriteState.Empty)
+        }
+    }
+
+    private fun renderState(state: FavoriteState) {
+        favoriteStateLiveData.postValue(state)
     }
 }

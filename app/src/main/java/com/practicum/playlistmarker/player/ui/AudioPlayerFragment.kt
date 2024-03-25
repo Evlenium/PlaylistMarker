@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +19,7 @@ import com.practicum.playlistmarker.databinding.FragmentAudioPlayerBinding
 import com.practicum.playlistmarker.player.domain.model.StatesPlayer
 import com.practicum.playlistmarker.player.presentation.AudioPlayerViewModel
 import com.practicum.playlistmarker.search.presentation.TrackMapper
+import com.practicum.playlistmarker.search.presentation.model.StateFavorite
 import com.practicum.playlistmarker.search.presentation.model.TrackSearchItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,6 +33,8 @@ class AudioPlayerFragment : Fragment() {
         get() = _binding!!
 
     private val audioPlayerViewModel by viewModel<AudioPlayerViewModel>()
+
+    private lateinit var buttonLike: ImageButton
 
     val track by lazy(LazyThreadSafetyMode.NONE) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -64,6 +68,7 @@ class AudioPlayerFragment : Fragment() {
 
     private fun parseTrackInfo(track: TrackSearchItem.Track?) {
         binding.apply {
+            buttonLike = btLike
             if (track != null) {
                 Glide.with(ivTrackImage)
                     .load(track.getResizeUrlArtwork())
@@ -91,19 +96,18 @@ class AudioPlayerFragment : Fragment() {
                     checkState(playerState)
                 }
             }
-            btLike.setOnClickListener {
-                val trackTmp = TrackMapper.mapToTrack(track!!)
-                audioPlayerViewModel.apply {
-                    onFavoriteClicked(trackTmp)
-                    observeFavoriteLiveData(trackTmp).observe(viewLifecycleOwner) { isFavorite ->
-                        if (isFavorite) {
-                            btLike.setImageResource(R.drawable.bt_red_like)
-                        } else {
-                            btLike.setImageResource(R.drawable.bt_like)
-                        }
-                    }
-                }
-            }
+        }
+        if (track?.isFavorite == true){
+            buttonLike.setImageResource(R.drawable.bt_red_like)
+        }
+        else buttonLike.setImageResource(R.drawable.bt_like)
+
+        audioPlayerViewModel.observeFavoriteState().observe(viewLifecycleOwner) {
+            renderFavoriteState(it)
+        }
+        buttonLike.setOnClickListener {
+            val trackTmp = TrackMapper.mapToTrack(track!!)
+            audioPlayerViewModel.onFavoriteClicked(trackTmp)
         }
     }
 
@@ -145,6 +149,20 @@ class AudioPlayerFragment : Fragment() {
 
     private fun dpToPx(dp: Int): Int {
         return (dp * Resources.getSystem().displayMetrics.density).toInt()
+    }
+
+    private fun renderFavoriteState(state: StateFavorite) {
+        when (state) {
+            is StateFavorite.Favorite -> {
+                buttonLike.setImageResource(R.drawable.bt_red_like)
+                track?.isFavorite = true
+            }
+
+            is StateFavorite.NotFavorite -> {
+                buttonLike.setImageResource(R.drawable.bt_like)
+                track?.isFavorite = false
+            }
+        }
     }
 
     override fun onDestroyView() {

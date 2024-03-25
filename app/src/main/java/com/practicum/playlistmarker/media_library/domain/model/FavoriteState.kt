@@ -1,6 +1,11 @@
 package com.practicum.playlistmarker.media_library.domain.model
 
-enum class FavoriteState {
-    STATE_LIST_IS_FULL,
-    STATE_LIST_IS_EMPTY
+import com.practicum.playlistmarker.player.domain.model.Track
+
+sealed interface FavoriteState {
+    data class Content(
+        val tracks: List<Track>,
+    ) : FavoriteState
+
+    object Empty : FavoriteState
 }
