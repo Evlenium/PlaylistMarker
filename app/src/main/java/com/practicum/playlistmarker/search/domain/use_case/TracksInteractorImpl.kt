@@ -15,7 +15,7 @@ class TracksInteractorImpl(private val repository: TracksRepository) : TracksInt
             when (result) {
                 is Resource.Success -> {
                     Pair(
-                        result.data?.map { trackDto -> MapperDto.mapFromTrackToTrackDto(trackDto) },
+                        result.data,
                         null
                     )
                 }

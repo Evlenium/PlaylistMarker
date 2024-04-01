@@ -7,7 +7,7 @@ import com.practicum.playlistmarker.search.domain.api.SearchHistoryInteractor
 
 class SearchHistoryInteractorImpl(private val localSearchHistoryStorage: LocalSearchHistoryStorage) :
     SearchHistoryInteractor {
-    override fun addTrackToHistory(track: Track) {
+    override suspend fun addTrackToHistory(track: Track) {
         localSearchHistoryStorage.addTrackToHistory(MapperDto.mapToTrackFromTrackDto(track))
     }
 
@@ -15,10 +15,7 @@ class SearchHistoryInteractorImpl(private val localSearchHistoryStorage: LocalSe
         localSearchHistoryStorage.clearHistory()
     }
 
-    override fun getTracksHistory(): List<Track> {
-        val trackList = localSearchHistoryStorage.getSavedHistory().map { track ->
-            MapperDto.mapFromTrackToTrackDto(track)
-        }
-        return trackList
+    override suspend fun getTracksHistory(): List<Track> {
+        return localSearchHistoryStorage.getSavedHistory()
     }
 }
