@@ -1,9 +1,13 @@
 package com.practicum.playlistmarker.di
 
 import android.media.MediaPlayer
+import com.google.gson.Gson
 import com.practicum.playlistmarker.media_library.data.converters.TrackDbConvertor
+import com.practicum.playlistmarker.media_library.data.converters.playlist.PlaylistConvertor
 import com.practicum.playlistmarker.media_library.data.repository.FavoriteRepositoryImpl
+import com.practicum.playlistmarker.media_library.data.repository.playlist.PlaylistRepositoryImpl
 import com.practicum.playlistmarker.media_library.domain.db.api.FavoriteRepository
+import com.practicum.playlistmarker.media_library.domain.db.api.playlist.PlaylistRepository
 import com.practicum.playlistmarker.player.data.repository.PlayerRepositoryImpl
 import com.practicum.playlistmarker.player.domain.api.PlayerRepository
 import com.practicum.playlistmarker.search.data.converters.TrackFavoriteConvertorFromDatabase
@@ -50,4 +54,10 @@ val repositoryModule = module {
     }
 
     factory { TrackFavoriteConvertorFromDatabase(get()) }
+
+    factory { PlaylistConvertor(Gson()) }
+
+    single<PlaylistRepository> {
+        PlaylistRepositoryImpl(get(), get())
+    }
 }

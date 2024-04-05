@@ -6,12 +6,22 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/bUpdateSearch"
+        android:id="@+id/btNewPlaylist"
         style="@style/AdditionalButtonNewPlaylist"
         android:text="@string/new_playlist"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_playlists"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btNewPlaylist"
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/ph_fragment_playlists_empty"
@@ -20,7 +30,7 @@
         android:layout_marginTop="46dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bUpdateSearch"
+        app:layout_constraintTop_toBottomOf="@+id/btNewPlaylist"
         app:srcCompat="@drawable/nothing_found" />
 
     <TextView

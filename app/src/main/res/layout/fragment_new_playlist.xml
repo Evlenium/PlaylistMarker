@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/background_audio_player_color"
+    tools:context=".media_library.ui.playlist.NewPlaylistFragment">
+
+    <Toolbar
+        android:id="@+id/toolbarPlaylist"
+        style="@style/TextToolbar"
+        android:collapseIcon="@drawable/bt_arrow_back_mode"
+        android:title="@string/new_playlist"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_playlist"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="26dp"
+        android:clickable="true"
+        app:cardBackgroundColor="?attr/background_audio_player_color"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/playlist_name_field"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@+id/playlist_name_field"
+        app:layout_constraintStart_toStartOf="@+id/playlist_name_field"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarPlaylist">
+
+        <ImageView
+            android:id="@+id/image_playlist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/placeholder_playlist_dotted"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder_playlist" />
+    </androidx.cardview.widget.CardView>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/playlist_name_field"
+        style="@style/MyOutlinedBox"
+        android:layout_marginTop="33dp"
+        android:layout_marginBottom="17dp"
+        app:hintTextColor="@color/YPblue"
+        app:layout_constraintBottom_toTopOf="@+id/playlist_desctiption_field"
+        app:layout_constraintEnd_toEndOf="@+id/playlist_desctiption_field"
+        app:layout_constraintStart_toStartOf="@+id/playlist_desctiption_field"
+        app:layout_constraintTop_toBottomOf="@+id/card_playlist">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/playlist_name_edit_text"
+            style="@style/TextEditorPlaylistStyle"
+            android:hint="@string/playlist_name"
+            app:boxStrokeColor="@color/YPblue"
+            app:hintTextColor="@color/YPblue" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/playlist_desctiption_field"
+        style="@style/MyOutlinedBox"
+        android:layout_marginBottom="170dp"
+        app:hintTextColor="@color/YPblue"
+        app:layout_constraintBottom_toTopOf="@+id/button_create_playlist"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/playlist_description_edit_text"
+            style="@style/TextEditorPlaylistStyle"
+            android:hint="@string/playlist_description"
+            app:boxStrokeColor="@color/YPblue"
+            app:hintTextColor="@color/YPblue" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_create_playlist"
+        style="@style/ButtonNewPlaylist"
+        android:background="@drawable/selector_create_playlist"
+        android:enabled="false"
+        android:text="@string/create"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

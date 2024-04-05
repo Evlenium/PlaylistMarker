@@ -44,6 +44,11 @@
     <attr name="text_navigation_color" />
     <attr name="select_text_navigation_color" />
 
+    <!-- Base attributes playlist fragment. -->
+    <attr name="background_playlist" />
+    <attr name="text_playlist" />
+    <attr name="select_text_playlist" />
+
 
     <!-- Base application theme. -->
     <style name="Base.Theme.PlaylistMarker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -83,6 +88,10 @@
         <item name="background_bottom_navigation">@color/YPwhite</item>
         <item name="text_navigation_color">@color/YPblack</item>
         <item name="select_text_navigation_color">@color/YPblue</item>
+        <!-- Base attributes bottom navigation. -->
+        <item name="background_playlist">@color/YPwhite</item>
+        <item name="text_playlist">@color/YPblack</item>
+        <item name="select_text_playlist">@color/YPblue</item>
     </style>
 
     <!-- Base attributes bottom navigation view. -->
@@ -99,6 +108,52 @@
         <item name="compatShadowEnabled">false</item>
         <item name="itemRippleColor">@null</item>
     </style>
+
+    <!-- Base attributes TextInputLayout. -->
+    <style name="MyOutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginHorizontal">16dp</item>
+        <item name="android:textColor">?attr/text_media_color</item>
+        <item name="android:textColorHint">?attr/text_media_color</item>
+        <item name="boxStrokeColor">@drawable/text_input_box_stroke</item>
+    </style>
+
+    <!-- Base attributes TextEditorPlaylistStyle. -->
+    <style name="TextEditorPlaylistStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:inputType">text</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">?attr/text_media_color</item>
+        <item name="android:textColorHint">?attr/text_media_color</item>
+        <item name="android:textCursorDrawable">@drawable/text_cursor</item>
+    </style>
+
+    <!-- Base attributes Dialog PlaylistEntity. -->
+    <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColorPrimary">?attr/text_media_color</item>
+        <item name="android:background">?attr/background_audio_player_color</item>
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?attr/text_media_color</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?attr/text_media_color</item>
+    </style>
+
+
 
     <!-- Base style main. -->
     <style name="Theme.PlaylistMarker" parent="Base.Theme.PlaylistMarker">
