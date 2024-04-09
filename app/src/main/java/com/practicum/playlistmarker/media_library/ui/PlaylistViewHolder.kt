@@ -16,7 +16,7 @@ class PlaylistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         namePlaylist.text = playlist.playlistName
         var textCounter = when {
             playlist.counterTracks % 10 == 1 && playlist.counterTracks % 100 != 11 -> " трек"
-            playlist.counterTracks % 10 in 2..5 && playlist.counterTracks % 100 < 20 -> " трека"
+            playlist.counterTracks % 10 in 2..4 && (playlist.counterTracks % 100 > 20 || playlist.counterTracks % 100 < 10) -> " трека"
             playlist.counterTracks % 100 in 10..20 -> " треков"
             else -> " треков"
         }
