@@ -16,7 +16,6 @@ import com.practicum.playlistmarker.databinding.FragmentPlaylistsBinding
 import com.practicum.playlistmarker.media_library.domain.model.playlist.Playlist
 import com.practicum.playlistmarker.media_library.domain.model.playlist.PlaylistState
 import com.practicum.playlistmarker.media_library.presentation.PlaylistsViewModel
-import com.practicum.playlistmarker.player.ui.AudioPlayerFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {

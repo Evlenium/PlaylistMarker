@@ -1,8 +1,8 @@
-package com.practicum.playlistmarker.media_library.data.converters.playlist
+package com.practicum.playlistmarker.media_library.data.converters
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.practicum.playlistmarker.media_library.data.db.entity.playlist.PlaylistEntity
+import com.practicum.playlistmarker.media_library.data.db.entity.PlaylistEntity
 import com.practicum.playlistmarker.media_library.domain.model.playlist.Playlist
 
 
@@ -13,8 +13,11 @@ class PlaylistConvertor(private val gson: Gson) {
             playlistName = playlist.playlistName,
             playlistDescription = playlist.playlistDescription,
             uri = playlist.uri,
-            trackIdList = gson.fromJson(playlist.trackIdList, object : TypeToken<ArrayList<String?>?>() {}.type),
-            arrayNumber = playlist.arrayNumber,
+            trackIdList = gson.fromJson(
+                playlist.trackIdList,
+                object : TypeToken<ArrayList<String?>?>() {}.type
+            ),
+            counterTracks = playlist.arrayNumber,
         )
     }
 
@@ -25,7 +28,7 @@ class PlaylistConvertor(private val gson: Gson) {
             playlistDescription = playlist.playlistDescription,
             uri = playlist.uri,
             trackIdList = gson.toJson(playlist.trackIdList),
-            arrayNumber = playlist.arrayNumber,
+            arrayNumber = playlist.counterTracks,
         )
     }
 }

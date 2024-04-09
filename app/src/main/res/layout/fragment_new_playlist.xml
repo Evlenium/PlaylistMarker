@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/background_audio_player_color"
-    tools:context=".media_library.ui.playlist.NewPlaylistFragment">
+    tools:context=".new_playlist.ui.NewPlaylistFragment">
 
     <Toolbar
         android:id="@+id/toolbarPlaylist"

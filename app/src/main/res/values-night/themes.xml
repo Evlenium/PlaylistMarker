@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- Dark application theme. -->
     <style name="Base.Theme.PlaylistMarker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -31,6 +31,7 @@
         <item name="icon_color">@color/YPwhite</item>
         <item name="text_audio_player_grey_color">@color/YPtextgray</item>
         <item name="text_audio_player_grey_color_icon">@color/YPGreyIcon</item>
+        <item name="bottom_sheet_stretcher">@color/YPwhite</item>
         <!-- Base attributes media. -->
         <item name="background_media_color">@color/YPblack</item>
         <item name="text_media_color">@color/YPwhite</item>
@@ -42,6 +43,20 @@
         <item name="background_playlist">@color/YPblack</item>
         <item name="text_playlist">@color/YPwhite</item>
         <item name="select_text_playlist">@color/YPblue</item>
+        <!-- Style to use for Snackbars in this theme. -->
+        <item name="snackbarStyle">@style/MaterialSnackbarTheme</item>
+        <item name="snackbarTextViewStyle">@style/MaterialSnackbarTextViewTheme</item>
+    </style>
+
+    <style name="MaterialSnackbarTheme" parent="@style/Widget.MaterialComponents.Snackbar">
+        <item name="android:background">@color/YPblack</item>
+    </style>
+
+    <style name="MaterialSnackbarTextViewTheme" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
+        <item name="android:textColor">@color/YPwhite</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <!-- Base style main. -->

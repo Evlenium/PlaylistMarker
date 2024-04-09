@@ -1,4 +1,4 @@
-package com.practicum.playlistmarker.media_library.presentation
+package com.practicum.playlistmarker.new_playlist.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

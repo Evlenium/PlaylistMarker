@@ -1,4 +1,4 @@
-package com.practicum.playlistmarker.media_library.data.db.entity.playlist
+package com.practicum.playlistmarker.media_library.data.db.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -13,6 +13,6 @@ data class PlaylistEntity(
     val playlistDescription: String?,
     val uri: String?,
     val trackIdList: String?,
-    val arrayNumber: Int?,
+    val arrayNumber: Int,
 )
 

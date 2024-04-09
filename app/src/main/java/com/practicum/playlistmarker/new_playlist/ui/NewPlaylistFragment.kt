@@ -1,10 +1,6 @@
-package com.practicum.playlistmarker.media_library.ui.playlist
+package com.practicum.playlistmarker.new_playlist.ui
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -17,12 +13,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.practicum.playlistmarker.R
 import com.practicum.playlistmarker.databinding.FragmentNewPlaylistBinding
-import com.practicum.playlistmarker.media_library.presentation.NewPlaylistViewModel
+import com.practicum.playlistmarker.new_playlist.presentation.NewPlaylistViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
-import java.io.FileOutputStream
 
 class NewPlaylistFragment : Fragment() {
 
@@ -58,7 +53,6 @@ class NewPlaylistFragment : Fragment() {
                         uriPicture = uri.toString()
                         imagePlaylist.background = null
                         imagePlaylist.setImageURI(uri)
-                        //saveImageToPrivateStorage(uri)
                     }
                 }
             }
@@ -92,79 +86,80 @@ class NewPlaylistFragment : Fragment() {
                         inputTextFromDescription,
                         uriPicture
                     )
+                    findNavController().popBackStack()
+                    Snackbar
+                        .make(view, "Плейлист $inputTextFromName создан", Snackbar.LENGTH_LONG)
+                        .show()
                 }
             }
-//            buttonCreatePlaylist.setOnClickListener {
-//                val filePath = File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
-//                val file = File(filePath, "first_cover.jpg")
-//                binding.imagePlaylist.setImageURI(file.toUri())
-//            }
         }
 
-        textWatcherName = object : TextWatcher {
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int,
-            ) {
-            }
+        textWatcherName =
+            object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int,
+                ) {
+                }
 
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int,
-            ) {
-                if (s != null) {
-                    if (s.isNotEmpty()) {
-                        inputTextFromName = s.toString()
-                        binding.buttonCreatePlaylist.isEnabled = true
-                    } else {
-                        binding.buttonCreatePlaylist.isEnabled = false
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int,
+                ) {
+                    if (s != null) {
+                        if (s.isNotEmpty()) {
+                            inputTextFromName = s.toString()
+                            binding.buttonCreatePlaylist.isEnabled = true
+                        } else {
+                            binding.buttonCreatePlaylist.isEnabled = false
+                        }
                     }
                 }
-            }
 
-            override fun afterTextChanged(s: Editable?) {
-                inputTextFromName = s.toString()
+                override fun afterTextChanged(s: Editable?) {
+                    inputTextFromName = s.toString()
+                }
             }
-        }
         inputEditTextName.addTextChangedListener(textWatcherName)
 
-        textWatcherDescription = object : TextWatcher {
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int,
-            ) {
-            }
+        textWatcherDescription =
+            object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int,
+                ) {
+                }
 
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int,
-            ) {
-            }
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int,
+                ) {
+                }
 
-            override fun afterTextChanged(s: Editable?) {
-                inputTextFromDescription = s.toString()
+                override fun afterTextChanged(s: Editable?) {
+                    inputTextFromDescription = s.toString()
+                }
             }
-        }
         inputEditTextDescription.addTextChangedListener(textWatcherDescription)
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner)
+        {
             backPressed()
         }
     }
 
     private fun backPressed() {
-        if (inputTextFromName.isNullOrEmpty()&&inputTextFromDescription.isNullOrEmpty()&&uriPicture.isNullOrEmpty()){
+        if (inputTextFromName.isNullOrEmpty() && inputTextFromDescription.isNullOrEmpty() && uriPicture.isNullOrEmpty()) {
             findNavController().popBackStack()
-        }
-        else{
+        } else {
             showDialog()
         }
     }
@@ -174,27 +169,6 @@ class NewPlaylistFragment : Fragment() {
         _binding = null
     }
 
-    private fun saveImageToPrivateStorage(uri: Uri) {
-        //создаём экземпляр класса File, который указывает на нужный каталог
-        val filePath =
-            File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
-        //создаем каталог, если он не создан
-        if (!filePath.exists()) {
-            filePath.mkdirs()
-        }
-        //создаём экземпляр класса File, который указывает на файл внутри каталога
-        val file = File(filePath, "first_cover.jpg")
-        // создаём входящий поток байтов из выбранной картинки
-        val inputStream = requireContext().contentResolver.openInputStream(uri)
-        // создаём исходящий поток байтов в созданный выше файл
-        val outputStream = FileOutputStream(file)
-        // записываем картинку с помощью BitmapFactory
-        BitmapFactory
-            .decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-    }
-
-
 
     private fun showDialog() {
         MaterialAlertDialogBuilder(requireContext(), R.style.MyAlertDialogStyle)
@@ -203,7 +177,15 @@ class NewPlaylistFragment : Fragment() {
             .setNegativeButton("Отмена") { dialog, which ->
             }
             .setPositiveButton("Завершить") { dialog, which ->
+                newPlaylistViewModel.savePlaylist(
+                    inputTextFromName!!,
+                    inputTextFromDescription,
+                    uriPicture
+                )
                 findNavController().popBackStack()
+                Snackbar
+                    .make(requireView(), "Плейлист $inputTextFromName создан", Snackbar.LENGTH_LONG)
+                    .show()
             }
             .show()
     }

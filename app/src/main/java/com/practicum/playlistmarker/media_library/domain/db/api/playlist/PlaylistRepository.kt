@@ -1,6 +1,7 @@
 package com.practicum.playlistmarker.media_library.domain.db.api.playlist
 
 import com.practicum.playlistmarker.media_library.domain.model.playlist.Playlist
+import com.practicum.playlistmarker.player.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 
 interface PlaylistRepository {
@@ -10,5 +11,5 @@ interface PlaylistRepository {
 
     suspend fun getPlaylists(): Flow<List<Playlist>>
 
-    fun updatePlaylist(playlist: Playlist)
+    suspend fun updatePlaylist(playlist: Playlist, track: Track)
 }

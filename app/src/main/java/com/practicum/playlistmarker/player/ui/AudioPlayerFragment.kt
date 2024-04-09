@@ -8,17 +8,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import com.practicum.playlistmarker.R
 import com.practicum.playlistmarker.databinding.FragmentAudioPlayerBinding
 import com.practicum.playlistmarker.player.domain.model.StatesPlayer
+import com.practicum.playlistmarker.player.domain.model.TrackPlaylistState
 import com.practicum.playlistmarker.player.presentation.AudioPlayerViewModel
-import com.practicum.playlistmarker.search.presentation.TrackMapper
+import com.practicum.playlistmarker.search.presentation.TrackMapper.mapToTrack
 import com.practicum.playlistmarker.search.presentation.model.StateFavorite
 import com.practicum.playlistmarker.search.presentation.model.TrackSearchItem
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +42,11 @@ class AudioPlayerFragment : Fragment() {
     private val audioPlayerViewModel by viewModel<AudioPlayerViewModel>()
 
     private lateinit var buttonLike: ImageButton
+
+    private var adapter: PlaylistButtomAdapter? = null
+    private lateinit var playlistList: RecyclerView
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+
 
     val track by lazy(LazyThreadSafetyMode.NONE) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -62,8 +74,87 @@ class AudioPlayerFragment : Fragment() {
                 R.style.SecondsActivityMediumTextAppearance
             )
         }
+        val bottomSheetContainer = binding.playlistBottomSheet
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        audioPlayerViewModel.observeTrackInPlaylistState().observe(viewLifecycleOwner) {
+            checkPlayerInPlaylistState(it)
+        }
+
+        val playlistClickListener = PlaylistButtomAdapter.PlaylistClickListener { playlist ->
+            if (track != null) {
+                audioPlayerViewModel.addTrackToPlaylist(playlist, mapToTrack(track!!))
+            }
+        }
+        adapter = PlaylistButtomAdapter(emptyList(), playlistClickListener)
+        playlistList = binding.recyclerViewPlaylists
+        playlistList.layoutManager =
+            LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        playlistList.adapter = adapter
+        binding.btAddPlaylist.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+        val overlay = binding.overlay
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        binding.buttonNewPlaylist.setOnClickListener {
+                            findNavController().navigate(
+                                R.id.action_audioPlayerFragment_to_playlistFragment
+                            )
+                        }
+                        audioPlayerViewModel.fillDataPlaylists()
+                        audioPlayerViewModel.observePlaylistState().observe(viewLifecycleOwner) {
+                            adapter?.setUpPlaylists(it)
+                        }
+                        overlay.isVisible = true
+                    }
+
+                    else -> {
+                        overlay.isVisible = false
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                overlay.alpha = slideOffset
+            }
+        })
         observeLengthComposition()
         parseTrackInfo(track)
+    }
+
+    private fun checkPlayerInPlaylistState(trackPlaylistState: TrackPlaylistState) {
+        when (trackPlaylistState) {
+            is TrackPlaylistState.NotInPlaylist -> {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                Snackbar
+                    .make(
+                        requireView(),
+                        "Добавлено в плейлист ${trackPlaylistState.name}",
+                        Snackbar.LENGTH_LONG
+                    )
+                    .show()
+            }
+
+            is TrackPlaylistState.InPlaylist -> {
+                Snackbar
+                    .make(
+                        requireView(),
+                        "Трек уже добавлен в плейлист ${trackPlaylistState.name}",
+                        Snackbar.LENGTH_LONG
+                    )
+                    .show()
+            }
+        }
     }
 
     private fun parseTrackInfo(track: TrackSearchItem.Track?) {
@@ -97,16 +188,15 @@ class AudioPlayerFragment : Fragment() {
                 }
             }
         }
-        if (track?.isFavorite == true){
+        if (track?.isFavorite == true) {
             buttonLike.setImageResource(R.drawable.bt_red_like)
-        }
-        else buttonLike.setImageResource(R.drawable.bt_like)
+        } else buttonLike.setImageResource(R.drawable.bt_like)
 
         audioPlayerViewModel.observeFavoriteState().observe(viewLifecycleOwner) {
             renderFavoriteState(it)
         }
         buttonLike.setOnClickListener {
-            val trackTmp = TrackMapper.mapToTrack(track!!)
+            val trackTmp = mapToTrack(track!!)
             audioPlayerViewModel.onFavoriteClicked(trackTmp)
         }
     }

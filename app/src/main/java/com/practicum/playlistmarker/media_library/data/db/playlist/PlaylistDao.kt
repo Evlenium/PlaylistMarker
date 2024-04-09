@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.practicum.playlistmarker.media_library.data.db.entity.playlist.PlaylistEntity
+import com.practicum.playlistmarker.media_library.data.db.entity.PlaylistEntity
 
 @Dao
 interface PlaylistDao {
@@ -20,5 +20,5 @@ interface PlaylistDao {
     suspend fun getPlaylists(): List<PlaylistEntity>
 
     @Update(PlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
-    fun updatePlaylists(playlistEntity: PlaylistEntity)
+    suspend fun updatePlaylists(playlistEntity: PlaylistEntity)
 }
