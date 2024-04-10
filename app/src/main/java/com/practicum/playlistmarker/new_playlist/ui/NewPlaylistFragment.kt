@@ -1,5 +1,6 @@
 package com.practicum.playlistmarker.new_playlist.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -42,7 +43,7 @@ class NewPlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Intent.ACTION_OPEN_DOCUMENT
         val pickMediaPicture =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
