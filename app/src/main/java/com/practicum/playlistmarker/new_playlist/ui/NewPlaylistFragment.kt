@@ -43,7 +43,6 @@ class NewPlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Intent.ACTION_OPEN_DOCUMENT
         val pickMediaPicture =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
@@ -51,6 +50,7 @@ class NewPlaylistFragment : Fragment() {
                         uriPicture = uri.toString()
                         imagePlaylist.background = null
                         imagePlaylist.setImageURI(uri)
+                        newPlaylistViewModel.saveImageToPrivateStorage(uri, requireContext())
                     }
                 }
             }

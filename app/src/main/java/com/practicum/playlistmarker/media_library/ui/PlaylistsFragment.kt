@@ -38,7 +38,7 @@ class PlaylistsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = PlaylistAdapter(emptyList())
+        adapter = PlaylistAdapter(emptyList(),requireContext())
         playlistlist = binding.recyclerViewPlaylists
         playlistlist.layoutManager = GridLayoutManager(requireContext(), 2)
         playlistlist.adapter = adapter

@@ -1,5 +1,6 @@
 package com.practicum.playlistmarker.player.ui
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +11,7 @@ import com.practicum.playlistmarker.media_library.ui.PlaylistViewHolder
 class PlaylistButtomAdapter(
     private var playlists: List<Playlist>,
     private val clickListener: PlaylistClickListener?,
+    private val context: Context
 ) :
     RecyclerView.Adapter<PlaylistViewHolder>() {
 
@@ -30,7 +32,7 @@ class PlaylistButtomAdapter(
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
         val item = playlists[position]
-        holder.bind(item,true)
+        holder.bind(item,true, context)
         holder.itemView.setOnClickListener {
             clickListener?.onPlaylistClick(item)
         }

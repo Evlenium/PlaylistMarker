@@ -88,7 +88,7 @@ class AudioPlayerFragment : Fragment() {
                 audioPlayerViewModel.addTrackToPlaylist(playlist, mapToTrack(track!!))
             }
         }
-        adapter = PlaylistButtomAdapter(emptyList(), playlistClickListener)
+        adapter = PlaylistButtomAdapter(emptyList(), playlistClickListener, requireContext())
         playlistList = binding.recyclerViewPlaylists
         playlistList.layoutManager =
             LinearLayoutManager(
