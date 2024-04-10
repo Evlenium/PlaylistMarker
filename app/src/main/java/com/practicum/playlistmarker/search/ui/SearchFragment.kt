@@ -143,7 +143,7 @@ class SearchFragment : Fragment() {
             ) {
                 binding.iClearText.visibility = clearButtonVisibility(s)
                 if (s != null) {
-                    if (s.isNotEmpty()) {
+                    if (s.isNotEmpty() && viewModel.lastText != s.toString()) {
                         inputTextFromSearch = s.toString()
                         viewModel.searchDebounce(inputTextFromSearch!!)
                     } else if (inputEditTextSearch.hasFocus() && s.isEmpty()) {

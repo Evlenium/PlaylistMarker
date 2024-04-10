@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmarker.R
 import com.practicum.playlistmarker.media_library.domain.model.playlist.Playlist
-import com.practicum.playlistmarker.media_library.ui.PlaylistViewHolder
 
 class PlaylistAdapter(private var playlists: List<Playlist>) :
     RecyclerView.Adapter<PlaylistViewHolder>() {

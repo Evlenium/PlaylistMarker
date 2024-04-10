@@ -1,8 +1,6 @@
 package com.practicum.playlistmarker.new_playlist.ui
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +8,7 @@ import android.widget.EditText
 import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -28,10 +27,8 @@ class NewPlaylistFragment : Fragment() {
     private val newPlaylistViewModel by viewModel<NewPlaylistViewModel>()
 
     private var inputTextFromName: String? = null
-    private lateinit var textWatcherName: TextWatcher
     private lateinit var inputEditTextName: EditText
     private var inputTextFromDescription: String? = null
-    private lateinit var textWatcherDescription: TextWatcher
     private lateinit var inputEditTextDescription: EditText
     private var uriPicture: String? = null
 
@@ -78,7 +75,30 @@ class NewPlaylistFragment : Fragment() {
 
         binding.apply {
             inputEditTextName = binding.playlistNameEditText
+            inputEditTextName.addTextChangedListener(
+                beforeTextChanged = { s, start, count, after -> },
+                onTextChanged = { s, start, before, count ->
+                    if (s != null) {
+                        if (s.isNotEmpty()) {
+                            inputTextFromName = s.toString()
+                            binding.buttonCreatePlaylist.isEnabled = true
+                        } else {
+                            binding.buttonCreatePlaylist.isEnabled = false
+                        }
+                    }
+                },
+                afterTextChanged = { s ->
+                    inputTextFromName = s.toString()
+                }
+            )
             inputEditTextDescription = binding.playlistDescriptionEditText
+            inputEditTextDescription.addTextChangedListener(
+                beforeTextChanged = { s, start, count, after -> },
+                onTextChanged = { s, start, before, count -> },
+                afterTextChanged = { s ->
+                    inputTextFromName = s.toString()
+                }
+            )
             buttonCreatePlaylist.setOnClickListener {
                 if (inputTextFromName != null) {
                     newPlaylistViewModel.savePlaylist(
@@ -93,63 +113,6 @@ class NewPlaylistFragment : Fragment() {
                 }
             }
         }
-
-        textWatcherName =
-            object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int,
-                ) {
-                }
-
-                override fun onTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    before: Int,
-                    count: Int,
-                ) {
-                    if (s != null) {
-                        if (s.isNotEmpty()) {
-                            inputTextFromName = s.toString()
-                            binding.buttonCreatePlaylist.isEnabled = true
-                        } else {
-                            binding.buttonCreatePlaylist.isEnabled = false
-                        }
-                    }
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    inputTextFromName = s.toString()
-                }
-            }
-        inputEditTextName.addTextChangedListener(textWatcherName)
-
-        textWatcherDescription =
-            object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int,
-                ) {
-                }
-
-                override fun onTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    before: Int,
-                    count: Int,
-                ) {
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    inputTextFromDescription = s.toString()
-                }
-            }
-        inputEditTextDescription.addTextChangedListener(textWatcherDescription)
-
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner)
         {
             backPressed()

@@ -21,4 +21,11 @@ class ResourceProvider(val context: Context) {
         return context.getString(R.string.yandex_practicum_offer_url)
     }
 
+    fun getMessageAddedToPlaylist(): String {
+        return context.getString(R.string.added_to_playlist)
+    }
+
+    fun getMessageAddedToPlaylistYet(): String {
+        return context.getString(R.string.added_to_playlist_yet)
+    }
 }

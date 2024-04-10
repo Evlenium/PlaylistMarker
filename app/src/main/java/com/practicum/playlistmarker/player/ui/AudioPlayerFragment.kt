@@ -139,7 +139,7 @@ class AudioPlayerFragment : Fragment() {
                 Snackbar
                     .make(
                         requireView(),
-                        "Добавлено в плейлист ${trackPlaylistState.name}",
+                        "${trackPlaylistState.message} ${trackPlaylistState.name}",
                         Snackbar.LENGTH_LONG
                     )
                     .show()
@@ -149,7 +149,7 @@ class AudioPlayerFragment : Fragment() {
                 Snackbar
                     .make(
                         requireView(),
-                        "Трек уже добавлен в плейлист ${trackPlaylistState.name}",
+                        "${trackPlaylistState.message} ${trackPlaylistState.name}",
                         Snackbar.LENGTH_LONG
                     )
                     .show()
@@ -181,7 +181,7 @@ class AudioPlayerFragment : Fragment() {
             btPlay.setOnClickListener {
                 audioPlayerViewModel.playbackControl()
             }
-            lifecycleScope.launch(Dispatchers.Main) {
+            viewLifecycleOwner.lifecycleScope.launch {
                 audioPlayerViewModel.getPlayerStateFlow().collect { playerState ->
                     audioPlayerViewModel.playerState = playerState
                     checkState(playerState)

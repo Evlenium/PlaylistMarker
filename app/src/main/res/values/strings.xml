@@ -37,4 +37,6 @@
     <string name="playlist_description">Описание</string>
     <string name="create">Создать</string>
     <string name="add_to_playlist">Добавить в плейлист</string>
+    <string name="added_to_playlist">Добавлено в плейлист</string>
+    <string name="added_to_playlist_yet">Трек уже добавлен в плейлист</string>
 </resources>
