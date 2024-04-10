@@ -64,7 +64,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/playlist_desctiption_field"
         style="@style/MyOutlinedBox"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="170dp"
         app:hintTextColor="@color/YPblue"
         app:layout_constraintBottom_toTopOf="@+id/button_create_playlist"
         app:layout_constraintEnd_toEndOf="parent"
