@@ -17,13 +17,12 @@ class PlaylistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val counterPlaylist: TextView = itemView.findViewById(R.id.counter_playlist_item)
     fun bind(playlist: Playlist, fromButtomRecycler: Boolean, context: Context) {
         namePlaylist.text = playlist.playlistName
-        var textCounter = when {
-            playlist.counterTracks % 10 == 1 && playlist.counterTracks % 100 != 11 -> " трек"
-            playlist.counterTracks % 10 in 2..4 && (playlist.counterTracks % 100 > 20 || playlist.counterTracks % 100 < 10) -> " трека"
-            playlist.counterTracks % 100 in 10..20 -> " треков"
-            else -> " треков"
-        }
-        textCounter = "${playlist.counterTracks} $textCounter"
+
+        val textCounter = context.resources.getQuantityString(
+            R.plurals.plurals_track,
+            playlist.counterTracks,
+            playlist.counterTracks
+        )
         counterPlaylist.text = textCounter
         val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
         val file = File(filePath, playlist.uri.toString())

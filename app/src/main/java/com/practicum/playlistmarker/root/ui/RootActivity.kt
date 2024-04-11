@@ -1,5 +1,7 @@
 package com.practicum.playlistmarker.root.ui
 
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -7,6 +9,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.practicum.playlistmarker.R
 import com.practicum.playlistmarker.databinding.ActivityRootBinding
+import java.util.Locale
+
 
 class RootActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRootBinding
@@ -37,5 +41,19 @@ class RootActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(updateLocale(base))
+        applyOverrideConfiguration(base.resources.configuration)
+    }
+
+    private fun updateLocale(context: Context): Context? {
+        val ruLocale = Locale("ru")
+        Locale.setDefault(ruLocale)
+        val configuration: Configuration = context.resources.configuration
+        configuration.setLocale(ruLocale)
+        configuration.setLayoutDirection(ruLocale)
+        return context.createConfigurationContext(configuration)
     }
 }
