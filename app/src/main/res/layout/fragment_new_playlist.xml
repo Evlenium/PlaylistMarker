@@ -31,7 +31,8 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@+id/playlist_name_field"
         app:layout_constraintStart_toStartOf="@+id/playlist_name_field"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarPlaylist">
+        app:layout_constraintTop_toBottomOf="@+id/toolbarPlaylist"
+        app:layout_constraintVertical_bias="0">
 
         <ImageView
             android:id="@+id/image_playlist"
@@ -46,11 +47,11 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/playlist_name_field"
         style="@style/MyOutlinedBox"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="32dp"
         app:hintTextColor="@color/YPblue"
-        app:layout_constraintBottom_toTopOf="@+id/playlist_desctiption_field"
         app:layout_constraintEnd_toEndOf="@+id/playlist_desctiption_field"
-        app:layout_constraintStart_toStartOf="@+id/playlist_desctiption_field">
+        app:layout_constraintStart_toStartOf="@+id/playlist_desctiption_field"
+        app:layout_constraintTop_toBottomOf="@+id/card_playlist">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/playlist_name_edit_text"
@@ -64,11 +65,14 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/playlist_desctiption_field"
         style="@style/MyOutlinedBox"
-        android:layout_marginBottom="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         app:hintTextColor="@color/YPblue"
         app:layout_constraintBottom_toTopOf="@+id/button_create_playlist"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playlist_name_field"
+        app:layout_constraintVertical_bias="0">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/playlist_description_edit_text"
