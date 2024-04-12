@@ -2,6 +2,7 @@ package com.practicum.playlistmarker.di
 
 import com.practicum.playlistmarker.media_library.presentation.FavoritesViewModel
 import com.practicum.playlistmarker.media_library.presentation.MediaLibraryViewModel
+import com.practicum.playlistmarker.new_playlist.presentation.NewPlaylistViewModel
 import com.practicum.playlistmarker.media_library.presentation.PlaylistsViewModel
 import com.practicum.playlistmarker.player.presentation.AudioPlayerViewModel
 import com.practicum.playlistmarker.search.presentation.TracksSearchViewModel
@@ -16,7 +17,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        AudioPlayerViewModel(get(), get())
+        AudioPlayerViewModel(get(), get(), get(),get())
     }
 
     viewModel {
@@ -32,6 +33,10 @@ val viewModelModule = module {
     }
 
     viewModel {
-        PlaylistsViewModel()
+        PlaylistsViewModel(get())
+    }
+
+    viewModel {
+        NewPlaylistViewModel(get())
     }
 }

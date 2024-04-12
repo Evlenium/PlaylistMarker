@@ -9,4 +9,5 @@
     <color name="YPtextgray">#AEAFB4</color>
     <color name="YPRed">#F56B6C</color>
     <color name="YPGreyIcon">#401A1B22</color>
+    <color name="overlayColor">#99000000</color>
 </resources>

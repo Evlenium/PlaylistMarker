@@ -18,6 +18,8 @@ class TracksSearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor,
 ) : AndroidViewModel(application) {
 
+    var lastText:String = ""
+
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
@@ -32,6 +34,7 @@ class TracksSearchViewModel(
         }
 
     fun searchDebounce(changedText: String) {
+        lastText = changedText
         trackSearchDebounce(changedText)
     }
 
