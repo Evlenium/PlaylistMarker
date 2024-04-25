@@ -112,7 +112,7 @@ class SearchFragment : Fragment() {
             hideMenuHistory()
         }
         trackAdapter =
-            TrackAdapter(mutableListOf(), trackClickListener, buttonClearHistoryClickListener)
+            TrackAdapter(mutableListOf(), trackClickListener, null, buttonClearHistoryClickListener)
         recyclerViewTrack.adapter = trackAdapter
         showHistory()
 
@@ -242,7 +242,6 @@ class SearchFragment : Fragment() {
             TrackMapper.mapToTrackSearchItem(track)
         }
         trackAdapter.setUpTracks(trackList)
-        trackAdapter.notifyDataSetChanged()
     }
 
     private fun render(state: TracksState) {

@@ -7,7 +7,7 @@
         <item name="text_button_main_menu_color">@color/YPblack</item>
         <item name="title_main_menu_color">@color/YPwhite</item>
         <item name="button_main_menu_color">@color/YPwhite</item>
-        <item name="icons_main_menu_color">@color/YPblack</item>
+        <item name="icon_back_color">@color/YPwhite</item>
         <!-- Settings menu. -->
         <item name="background_settings_color">@color/YPblack</item>
         <item name="title_settings_color">@color/YPwhite</item>

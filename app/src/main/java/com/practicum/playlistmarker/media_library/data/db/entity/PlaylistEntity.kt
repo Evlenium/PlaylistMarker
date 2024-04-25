@@ -12,7 +12,7 @@ data class PlaylistEntity(
     val playlistName: String,
     val playlistDescription: String?,
     val uri: String?,
-    val trackIdList: String?,
+    val trackIdList: String,
     val arrayNumber: Int,
 )
 

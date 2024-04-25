@@ -13,41 +13,45 @@
         android:layout_marginVertical="8dp"
         android:layout_marginStart="12dp"
         tools:srcCompat="@tools:sample/avatars" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginStart="66dp"
         android:layout_marginTop="14dp"
-        android:layout_marginEnd="44dp">
+        android:layout_marginEnd="44dp"
+        android:orientation="vertical">
+
         <TextView
             android:id="@+id/tv_name_composition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Yesterday (Remastered 2009)"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
             android:textColor="?attr/composition_name_search_color"
             android:textSize="@dimen/text_size_16"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:singleLine="true"/>
+            tools:text="Yesterday (Remastered 2009)" />
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginTop="1dp"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/tv_name_compositor"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
                 android:fontFamily="@font/ys_display_regular"
-                tools:text="The Beatles"
-                android:maxLength="50"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:textColor="?attr/compositor_name_search_color"
                 android:textFontWeight="400"
                 android:textSize="11sp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:singleLine="true"/>
+                tools:text="The Beatles" />
 
             <ImageView
                 android:id="@+id/iv_point_betveen_text_length"
@@ -57,14 +61,13 @@
 
             <TextView
                 android:id="@+id/tv_length_composition"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:fontFamily="@font/ys_display_regular"
-                tools:text="2:55"
-                android:textFontWeight="400"
                 android:textColor="?attr/compositor_name_search_color"
-                android:textSize="11sp" />
+                android:textFontWeight="400"
+                android:textSize="11sp"
+                tools:text="2:55" />
         </LinearLayout>
     </LinearLayout>
 
