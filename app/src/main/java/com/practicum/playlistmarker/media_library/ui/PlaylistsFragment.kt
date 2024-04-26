@@ -16,6 +16,7 @@ import com.practicum.playlistmarker.databinding.FragmentPlaylistsBinding
 import com.practicum.playlistmarker.media_library.domain.model.playlist.Playlist
 import com.practicum.playlistmarker.media_library.domain.model.playlist.PlaylistState
 import com.practicum.playlistmarker.media_library.presentation.PlaylistsViewModel
+import com.practicum.playlistmarker.new_playlist.ui.NewPlaylistFragment
 import com.practicum.playlistmarker.playlist.ui.PlaylistFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -56,7 +57,10 @@ class PlaylistsFragment : Fragment() {
         placeholderImage = binding.phFragmentPlaylistsEmpty
         placeholderText = binding.nothingCreated
         binding.btNewPlaylist.setOnClickListener {
-            findNavController().navigate(R.id.action_mediaLibraryFragment_to_newPlaylistFragment)
+            findNavController().navigate(
+                R.id.action_mediaLibraryFragment_to_newPlaylistFragment,
+                NewPlaylistFragment.createArgs(null)
+            )
         }
 
     }

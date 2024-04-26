@@ -2,6 +2,7 @@ package com.practicum.playlistmarker.new_playlist.ui
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,17 +11,20 @@ import android.widget.EditText
 import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmarker.R
 import com.practicum.playlistmarker.databinding.FragmentNewPlaylistBinding
 import com.practicum.playlistmarker.media_library.domain.model.playlist.Playlist
 import com.practicum.playlistmarker.new_playlist.presentation.NewPlaylistViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
 
 open class NewPlaylistFragment : Fragment() {
 
@@ -54,7 +58,10 @@ open class NewPlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("MyPlaylist", playlist.toString())
+        inputEditTextName = binding.playlistNameEditText
+        inputEditTextDescription = binding.playlistDescriptionEditText
+        binding.buttonCreatePlaylist.isEnabled = false
+        bindInfoPlaylistEdit()
         val pickMediaPicture =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
@@ -62,6 +69,7 @@ open class NewPlaylistFragment : Fragment() {
                         uriPicture = uri.toString()
                         imagePlaylist.background = null
                         imagePlaylist.setImageURI(uri)
+                        Log.d("MyPlaylistUriInitEdit", uriPicture.toString())
                         newPlaylistViewModel.saveImageToPrivateStorage(uri, requireContext())
                     }
                 }
@@ -86,10 +94,6 @@ open class NewPlaylistFragment : Fragment() {
         }
 
         binding.apply {
-            inputEditTextName = binding.playlistNameEditText
-            if (playlist!=null){
-                inputEditTextName.setText(playlist!!.playlistName)
-            }
             inputEditTextName.addTextChangedListener(
                 beforeTextChanged = { s, start, count, after -> },
                 onTextChanged = { s, start, before, count ->
@@ -106,12 +110,6 @@ open class NewPlaylistFragment : Fragment() {
                     inputTextFromName = s.toString()
                 }
             )
-            inputEditTextDescription = binding.playlistDescriptionEditText
-            if (playlist!=null){
-                if (playlist!!.playlistDescription!=null) {
-                    inputEditTextDescription.setText(playlist!!.playlistDescription)
-                }
-            }
             inputEditTextDescription.addTextChangedListener(
                 beforeTextChanged = { s, start, count, after -> },
                 onTextChanged = { s, start, before, count -> },
@@ -119,19 +117,47 @@ open class NewPlaylistFragment : Fragment() {
                     inputTextFromDescription = s.toString()
                 }
             )
-            buttonCreatePlaylist.setOnClickListener {
-                if (inputTextFromName != null) {
-                    newPlaylistViewModel.savePlaylist(
-                        inputTextFromName!!,
-                        inputTextFromDescription,
-                        uriPicture
-                    )
-                    findNavController().popBackStack()
-                    Snackbar
-                        .make(view, "Плейлист $inputTextFromName создан", Snackbar.LENGTH_LONG)
-                        .show()
+            if (playlist == null) {
+                buttonCreatePlaylist.setOnClickListener {
+                    if (inputTextFromName != null) {
+                        newPlaylistViewModel.savePlaylist(
+                            inputTextFromName!!,
+                            inputTextFromDescription
+                        )
+                        Log.d("MyPlaylistPlaylistNew", uriPicture.toString())
+                        findNavController().popBackStack()
+                        Snackbar
+                            .make(view, "Плейлист $inputTextFromName создан", Snackbar.LENGTH_LONG)
+                            .show()
+                    }
+                }
+            } else {
+                buttonCreatePlaylist.setOnClickListener {
+                    if (inputTextFromName != null) {
+                        val playlistEdit = Playlist(
+                            playlistId = playlist!!.playlistId,
+                            playlistName = inputTextFromName!!,
+                            playlistDescription = inputTextFromDescription,
+                            uri = newPlaylistViewModel.observePlaylistState().value,
+                            trackIdList = playlist!!.trackIdList,
+                            counterTracks = playlist!!.counterTracks,
+                        )
+                        Log.d("MyPlaylistEdit", uriPicture.toString())
+                        newPlaylistViewModel.editPlaylist(
+                            playlistEdit,
+                        )
+                        findNavController().popBackStack()
+                        Snackbar
+                            .make(
+                                requireView(),
+                                "Плейлист $inputTextFromName редактирован",
+                                Snackbar.LENGTH_LONG
+                            )
+                            .show()
+                    }
                 }
             }
+
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner)
         {
@@ -139,11 +165,43 @@ open class NewPlaylistFragment : Fragment() {
         }
     }
 
+    private fun bindInfoPlaylistEdit() {
+        if (playlist != null) {
+            inputTextFromName = playlist!!.playlistName
+            inputTextFromDescription = playlist!!.playlistDescription
+            uriPicture = playlist!!.uri
+            binding.apply {
+                toolbarPlaylist.setTitle(R.string.edit_playlist)
+                buttonCreatePlaylist.isEnabled = true
+                buttonCreatePlaylist.setText(R.string.edit)
+            }
+            inputEditTextName.setText(playlist!!.playlistName)
+            if (playlist!!.playlistDescription != null) {
+                inputEditTextDescription.setText(playlist!!.playlistDescription)
+            }
+            if (playlist!!.uri != null) {
+                binding.imagePlaylist.background = null
+                val filePath = File(
+                    requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                    "myalbum"
+                )
+                val file = File(filePath, playlist!!.uri.toString())
+                if (playlist!!.uri != null) {
+                    binding.imagePlaylist.setImageURI(file.toUri())
+                }
+            }
+        }
+    }
+
     private fun backPressed() {
-        if (inputTextFromName.isNullOrEmpty() && inputTextFromDescription.isNullOrEmpty() && uriPicture.isNullOrEmpty()) {
-            findNavController().popBackStack()
+        if (playlist == null) {
+            if (inputTextFromName.isNullOrEmpty() && inputTextFromDescription.isNullOrEmpty() && uriPicture.isNullOrEmpty()) {
+                findNavController().popBackStack()
+            } else {
+                showDialog()
+            }
         } else {
-            showDialog()
+            findNavController().popBackStack()
         }
     }
 
@@ -162,8 +220,7 @@ open class NewPlaylistFragment : Fragment() {
             .setPositiveButton("Завершить") { dialog, which ->
                 newPlaylistViewModel.savePlaylist(
                     inputTextFromName!!,
-                    inputTextFromDescription,
-                    uriPicture
+                    inputTextFromDescription
                 )
                 findNavController().popBackStack()
                 Snackbar
@@ -176,9 +233,10 @@ open class NewPlaylistFragment : Fragment() {
     companion object {
         private const val ARGS_PLAYLIST_NEW = "playlist_new"
 
-        fun createArgs(playlist: Playlist): Bundle =
-            bundleOf(
+        fun createArgs(playlist: Playlist?): Bundle {
+            return bundleOf(
                 ARGS_PLAYLIST_NEW to playlist,
             )
+        }
     }
 }

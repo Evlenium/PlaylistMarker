@@ -5,12 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practicum.playlistmarker.App
-import com.practicum.playlistmarker.R
 import com.practicum.playlistmarker.media_library.domain.db.api.playlist.PlaylistInteractor
 import com.practicum.playlistmarker.media_library.domain.model.playlist.Playlist
 import com.practicum.playlistmarker.player.domain.model.Track
-import com.practicum.playlistmarker.sharing.data.ExternalNavigator
 import com.practicum.playlistmarker.sharing.domain.api.SharingInteractor
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -45,6 +42,9 @@ class PlaylistViewModel(
                 tracksTimeMills += track.trackTimeMillis.toLong()
             }
             playlistLengthLiveData.postValue(tracksTimeMills)
+        } else {
+            playlistTracksLiveData.postValue(emptyList())
+            playlistLengthLiveData.postValue(0)
         }
     }
 

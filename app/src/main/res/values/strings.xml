@@ -60,4 +60,6 @@
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="zero_minute">0 минут</string>
+    <string name="edit">Редактировать</string>
+    <string name="edit_playlist">Редактировать плейлист</string>
 </resources>

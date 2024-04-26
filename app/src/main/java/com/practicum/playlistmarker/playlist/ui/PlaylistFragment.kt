@@ -3,6 +3,7 @@ package com.practicum.playlistmarker.playlist.ui
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -105,14 +106,18 @@ class PlaylistFragment : Fragment() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_COLLAPSED -> {
-                        setPlaylistInfo()
+                        playlistViewModel.observePlaylist().observe(viewLifecycleOwner) {
+                            setPlaylistInfo(it)
+                        }
                         binding.textViewPlaylistName
                         binding.playlistShare.setOnClickListener {
                             sharePlaylist()
                         }
                         binding.playlistEditInformation.setOnClickListener {
-                            findNavController().navigate(R.id.action_playlistFragment_to_newPlaylistFragment)
-                            NewPlaylistFragment.createArgs(playlist!!)
+                            findNavController().navigate(
+                                R.id.action_playlistFragment_to_newPlaylistFragment,
+                                NewPlaylistFragment.createArgs(playlist!!)
+                            )
                         }
                         binding.playlistDeletePlaylist.setOnClickListener {
                             showDialogDeletePlaylist()
@@ -146,21 +151,21 @@ class PlaylistFragment : Fragment() {
         }
     }
 
-    private fun setPlaylistInfo() {
+    private fun setPlaylistInfo(playlist: Playlist?) {
         if (playlist != null) {
-            binding.menuPlaylist.namePlaylistItem.text = playlist?.playlistName
+            binding.menuPlaylist.namePlaylistItem.text = playlist.playlistName
             val textCounter = requireContext().resources.getQuantityString(
                 R.plurals.plurals_track,
-                playlist!!.counterTracks,
-                playlist!!.counterTracks
+                playlist.counterTracks,
+                playlist.counterTracks
             )
             binding.menuPlaylist.counterPlaylistItem.text = textCounter
             val filePath = File(
                 requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                 "myalbum"
             )
-            val file = File(filePath, playlist!!.uri.toString())
-            if (playlist!!.uri != null) {
+            val file = File(filePath, playlist.uri.toString())
+            if (playlist.uri != null) {
                 binding.menuPlaylist.imagePlaylistItem.setImageURI(file.toUri())
             } else {
                 binding.menuPlaylist.imagePlaylistItem.setImageResource(R.drawable.ph_empty)
