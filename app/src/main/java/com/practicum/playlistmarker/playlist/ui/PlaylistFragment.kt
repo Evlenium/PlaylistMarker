@@ -191,12 +191,22 @@ class PlaylistFragment : Fragment() {
         )
         trackAdapter = TrackAdapter(mutableListOf(), trackClickListener, trackLongClickListener)
         trackList.adapter = trackAdapter
-        playlistViewModel.observeDataInPlaylist().observe(viewLifecycleOwner) {
-            trackAdapter!!.setUpTracks(
-                tracks = it.map { track ->
-                    TrackMapper.mapToTrackSearchItem(track)
-                }
-            )
+        playlistViewModel.observeDataInPlaylist().observe(viewLifecycleOwner) { trackList ->
+            if (trackList.isEmpty()) {
+                Snackbar
+                    .make(
+                        requireView(),
+                        getString(R.string.empty_track_list),
+                        Snackbar.LENGTH_LONG
+                    )
+                    .show()
+            } else {
+                trackAdapter!!.setUpTracks(
+                    tracks = trackList.asReversed().map { track ->
+                        TrackMapper.mapToTrackSearchItem(track)
+                    }
+                )
+            }
         }
         trackList.isVisible = true
     }

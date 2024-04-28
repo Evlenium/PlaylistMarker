@@ -72,13 +72,15 @@ class PlaylistViewModel(
             append("${playlistLiveData.value?.playlistName}\n")
             append("${playlistLiveData.value?.playlistDescription}\n")
             append("${sharingInteractor.getPluralsTrack(playlistLiveData.value?.counterTracks!!)}\n")
-            playlistTracksLiveData.value!!.forEachIndexed { index, track ->
-                append("${(index + 1)}. ${track.artistName} - ${track.trackName}\n")
+            playlistTracksLiveData.value!!.asReversed().forEachIndexed { index, track ->
+                append("${(index + 1)}. ${track.artistName} - ${track.trackName} ")
                 append(
-                    SimpleDateFormat(
-                        "mm:ss",
-                        Locale.getDefault()
-                    ).format(track.trackTimeMillis.toLong())
+                    "(${
+                        SimpleDateFormat(
+                            "mm:ss",
+                            Locale.getDefault()
+                        ).format(track.trackTimeMillis.toLong())
+                    })\n"
                 )
             }
         }

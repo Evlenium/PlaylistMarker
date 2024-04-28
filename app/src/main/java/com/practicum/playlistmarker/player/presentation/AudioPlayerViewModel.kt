@@ -99,6 +99,7 @@ class AudioPlayerViewModel(
 
     fun preparePlayer(track: TrackSearchItem.Track?) {
         if (track != null) {
+            playerInteractor.reset()
             if (track.previewUrl != null) {
                 url = track.previewUrl
                 val trackItem = PlayerMapper.mapToTrackForPlayer(track)

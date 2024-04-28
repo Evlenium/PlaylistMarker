@@ -24,6 +24,7 @@
     <attr name="editor_search_color" />
     <attr name="composition_name_search_color" />
     <attr name="compositor_name_search_color" />
+    <attr name="button_clear_text_icon" />
 
     <!-- Base attributes audio player. -->
     <attr name="background_audio_player_color" />
@@ -75,6 +76,7 @@
         <item name="editor_search_color">@color/YPlightgray</item>
         <item name="composition_name_search_color">@color/YPblack</item>
         <item name="compositor_name_search_color">@color/YPtextgray</item>
+        <item name="button_clear_text_icon">@color/YPtextgray</item>
         <!-- Base attributes audio player. -->
         <item name="background_audio_player_color">@color/YPwhite</item>
         <item name="text_audio_player_color">@color/YPblack</item>

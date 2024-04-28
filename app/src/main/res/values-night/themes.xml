@@ -24,6 +24,7 @@
         <item name="editor_search_color">@color/YPwhite</item>
         <item name="composition_name_search_color">@color/YPwhite</item>
         <item name="compositor_name_search_color">@color/YPwhite</item>
+        <item name="button_clear_text_icon">@color/YPblack</item>
         <!-- Base attributes audio player. -->
         <item name="background_audio_player_color">@color/YPblack</item>
         <item name="text_audio_player_color">@color/YPwhite</item>

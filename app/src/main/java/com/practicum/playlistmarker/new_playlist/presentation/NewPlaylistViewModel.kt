@@ -19,8 +19,15 @@ import java.util.UUID
 
 class NewPlaylistViewModel(private val playlistInteractor: PlaylistInteractor) : ViewModel() {
 
-    private val uriUUIDLiveData = MutableLiveData<String>()
-    fun observePlaylistState(): LiveData<String> = uriUUIDLiveData
+    private val uriUUIDLiveData = MutableLiveData<String?>()
+
+    private val playlistLiveData = MutableLiveData<Playlist>()
+    fun observePlaylist(): MutableLiveData<Playlist> = playlistLiveData
+    fun fillPlaylistUpdateInfo(playlistId: Int) {
+        viewModelScope.launch {
+            playlistLiveData.postValue(playlistInteractor.getPlaylistById(playlistId = playlistId))
+        }
+    }
 
     fun savePlaylist(name: String, description: String?) {
         viewModelScope.launch {
@@ -44,7 +51,7 @@ class NewPlaylistViewModel(private val playlistInteractor: PlaylistInteractor) :
             filePath.mkdirs()
         }
         val uuid = UUID.randomUUID()
-        uriUUIDLiveData.value = "$uuid.jpg"
+        uriUUIDLiveData.postValue("$uuid.jpg")
         val file = File(filePath, "$uuid.jpg")
         val inputStream = context.contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)

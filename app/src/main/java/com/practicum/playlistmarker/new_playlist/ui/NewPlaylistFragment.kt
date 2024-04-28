@@ -138,7 +138,7 @@ open class NewPlaylistFragment : Fragment() {
                             playlistId = playlist!!.playlistId,
                             playlistName = inputTextFromName!!,
                             playlistDescription = inputTextFromDescription,
-                            uri = newPlaylistViewModel.observePlaylistState().value,
+                            uri = uriPicture.toString(),
                             trackIdList = playlist!!.trackIdList,
                             counterTracks = playlist!!.counterTracks,
                         )
@@ -167,29 +167,33 @@ open class NewPlaylistFragment : Fragment() {
 
     private fun bindInfoPlaylistEdit() {
         if (playlist != null) {
-            inputTextFromName = playlist!!.playlistName
-            inputTextFromDescription = playlist!!.playlistDescription
-            uriPicture = playlist!!.uri
-            binding.apply {
-                toolbarPlaylist.setTitle(R.string.edit_playlist)
-                buttonCreatePlaylist.isEnabled = true
-                buttonCreatePlaylist.setText(R.string.edit)
+            newPlaylistViewModel.fillPlaylistUpdateInfo(playlistId = playlist!!.playlistId)
+            newPlaylistViewModel.observePlaylist().observe(viewLifecycleOwner) {
+                parsePlaylistInfo(it)
             }
-            inputEditTextName.setText(playlist!!.playlistName)
-            if (playlist!!.playlistDescription != null) {
-                inputEditTextDescription.setText(playlist!!.playlistDescription)
-            }
-            if (playlist!!.uri != null) {
-                binding.imagePlaylist.background = null
-                val filePath = File(
-                    requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                    "myalbum"
-                )
-                val file = File(filePath, playlist!!.uri.toString())
-                if (playlist!!.uri != null) {
-                    binding.imagePlaylist.setImageURI(file.toUri())
-                }
-            }
+        }
+    }
+
+    private fun parsePlaylistInfo(gettingPlaylist: Playlist) {
+        inputTextFromName = gettingPlaylist.playlistName
+        inputTextFromDescription = gettingPlaylist.playlistDescription
+        uriPicture = gettingPlaylist.uri
+        binding.apply {
+            toolbarPlaylist.setTitle(R.string.edit_playlist)
+            buttonCreatePlaylist.isEnabled = true
+        }
+        inputEditTextName.setText(gettingPlaylist.playlistName)
+        if (gettingPlaylist.playlistDescription != null) {
+            inputEditTextDescription.setText(gettingPlaylist.playlistDescription)
+        }
+        if (gettingPlaylist.uri != null) {
+            binding.imagePlaylist.background = null
+            val filePath = File(
+                requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                "myalbum"
+            )
+            val file = File(filePath, gettingPlaylist.uri.toString())
+            binding.imagePlaylist.setImageURI(file.toUri())
         }
     }
 
