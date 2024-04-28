@@ -19,7 +19,7 @@ import java.util.UUID
 
 class NewPlaylistViewModel(private val playlistInteractor: PlaylistInteractor) : ViewModel() {
 
-    private val uriUUIDLiveData = MutableLiveData<String?>()
+    val uriUUIDLiveData = MutableLiveData<String?>()
 
     private val playlistLiveData = MutableLiveData<Playlist>()
     fun observePlaylist(): MutableLiveData<Playlist> = playlistLiveData
@@ -56,14 +56,8 @@ class NewPlaylistViewModel(private val playlistInteractor: PlaylistInteractor) :
         val inputStream = context.contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)
 
-        fun Bitmap.rotate(degrees: Float): Bitmap {
-            val matrix = Matrix().apply { postRotate(degrees) }
-            return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true)
-        }
-
         BitmapFactory
             .decodeStream(inputStream)
-            .rotate(90F)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
     }
 

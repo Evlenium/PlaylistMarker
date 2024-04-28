@@ -138,7 +138,7 @@ open class NewPlaylistFragment : Fragment() {
                             playlistId = playlist!!.playlistId,
                             playlistName = inputTextFromName!!,
                             playlistDescription = inputTextFromDescription,
-                            uri = uriPicture.toString(),
+                            uri = newPlaylistViewModel.uriUUIDLiveData.value,
                             trackIdList = playlist!!.trackIdList,
                             counterTracks = playlist!!.counterTracks,
                         )
@@ -178,6 +178,8 @@ open class NewPlaylistFragment : Fragment() {
         inputTextFromName = gettingPlaylist.playlistName
         inputTextFromDescription = gettingPlaylist.playlistDescription
         uriPicture = gettingPlaylist.uri
+        newPlaylistViewModel.uriUUIDLiveData.postValue(uriPicture)
+        Log.d("MyPlaylistBase", uriPicture.toString())
         binding.apply {
             toolbarPlaylist.setTitle(R.string.edit_playlist)
             buttonCreatePlaylist.isEnabled = true
