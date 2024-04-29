@@ -1,5 +1,6 @@
 package com.practicum.playlistmarker.search.ui
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -193,11 +194,21 @@ class SearchFragment : Fragment() {
 
     private fun showErrorConnection(errorMessage: String) {
         hideMenuHistory()
+        hideKeyboard(requireActivity())
         placeHolderLayoutError.isVisible = true
         progressBarSearch.isVisible = false
         textViewErrorSearch.text = errorMessage
         buttonUpdateSearch.isVisible = true
         imageViewErrorConnection.setImageResource(R.drawable.ph_internet_error)
+    }
+
+    private fun hideKeyboard(activity: Activity) {
+        val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        var view = activity.currentFocus
+        if (view == null) {
+            view = View(activity)
+        }
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private fun showEmptyTrackList(emptyMessage: String) {
