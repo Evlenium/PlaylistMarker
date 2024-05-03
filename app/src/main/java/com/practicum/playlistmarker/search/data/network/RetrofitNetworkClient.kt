@@ -6,6 +6,7 @@ import android.net.NetworkCapabilities
 import com.practicum.playlistmarker.search.data.NetworkClient
 import com.practicum.playlistmarker.search.data.dto.Response
 import com.practicum.playlistmarker.search.data.dto.TracksSearchRequest
+import com.practicum.playlistmarker.search.data.dto.TracksSearchResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -20,11 +21,16 @@ class RetrofitNetworkClient(private val iTunesService: iTunesApi, private val co
         }
 
         return withContext(Dispatchers.IO) {
+            var response: retrofit2.Response<TracksSearchResponse>? = null
             try {
-                val response = iTunesService.searchTracks(dto.expression)
-                response.apply { resultCode = 200 }
+                response = iTunesService.searchTracks(dto.expression)
+                response.body()!!.apply { resultCode = 200 }
             } catch (e: Throwable) {
-                Response().apply { resultCode = 500 }
+                if (response!!.code() == 404) {
+                    Response().apply { resultCode = 404 }
+                } else {
+                    Response().apply { resultCode = 500 }
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ import com.practicum.playlistmarker.media_library.data.db.entity.PlaylistEntity
 import com.practicum.playlistmarker.media_library.data.db.entity.TrackEntity
 import com.practicum.playlistmarker.media_library.data.db.playlist.PlaylistDatabase
 import com.practicum.playlistmarker.media_library.data.db.playlist.TrackPlaylistDataBase
+import com.practicum.playlistmarker.media_library.domain.db.api.FavoriteRepository
 import com.practicum.playlistmarker.media_library.domain.db.api.playlist.PlaylistRepository
 import com.practicum.playlistmarker.media_library.domain.model.playlist.Playlist
 import com.practicum.playlistmarker.player.domain.model.Track
@@ -17,6 +18,7 @@ class PlaylistRepositoryImpl(
     private val playlistConvertor: PlaylistConvertor,
     private val trackPlaylistDatabase: TrackPlaylistDataBase,
     private val trackDbConvertor: TrackDbConvertor,
+    private val favoriteRepository: FavoriteRepository
 ) : PlaylistRepository {
     override suspend fun addPlaylist(
         playlistName: String,
@@ -74,12 +76,20 @@ class PlaylistRepositoryImpl(
     }
 
     override suspend fun getTracksInPlaylist(tracksId: List<String>): Flow<List<Track>> = flow {
+        val favoriteTrackList = favoriteRepository.getFavoriteTrackList()
         val trackList =
             convertFromTrackEntityMap(trackPlaylistDatabase.trackPlaylistDao().getTracks())
         val trackListResult = mutableListOf<Track>()
         trackList.forEach {
             if (it.trackId in tracksId) {
                 trackListResult.add(it)
+            }
+        }
+        trackListResult.forEach { track: Track ->
+            favoriteTrackList.forEach { trackId ->
+                if (trackId == track.trackId) {
+                    track.isFavorite = true
+                }
             }
         }
         emit(trackListResult.toList())

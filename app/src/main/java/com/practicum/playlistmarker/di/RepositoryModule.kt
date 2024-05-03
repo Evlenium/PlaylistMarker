@@ -58,6 +58,6 @@ val repositoryModule = module {
     factory { PlaylistConvertor(Gson()) }
 
     single<PlaylistRepository> {
-        PlaylistRepositoryImpl(get(), get(), get(), get())
+        PlaylistRepositoryImpl(get(), get(), get(), get(), get())
     }
 }
