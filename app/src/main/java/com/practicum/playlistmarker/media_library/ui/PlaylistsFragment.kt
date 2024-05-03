@@ -16,6 +16,8 @@ import com.practicum.playlistmarker.databinding.FragmentPlaylistsBinding
 import com.practicum.playlistmarker.media_library.domain.model.playlist.Playlist
 import com.practicum.playlistmarker.media_library.domain.model.playlist.PlaylistState
 import com.practicum.playlistmarker.media_library.presentation.PlaylistsViewModel
+import com.practicum.playlistmarker.new_playlist.ui.NewPlaylistFragment
+import com.practicum.playlistmarker.playlist.ui.PlaylistFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
@@ -38,7 +40,13 @@ class PlaylistsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = PlaylistAdapter(emptyList(),requireContext())
+        val playlistClickListener = PlaylistAdapter.PlaylistClickListener {
+            findNavController().navigate(
+                R.id.action_mediaLibraryFragment_to_playlistFragment,
+                PlaylistFragment.createArgs(it)
+            )
+        }
+        adapter = PlaylistAdapter(emptyList(), requireContext(), playlistClickListener)
         playlistlist = binding.recyclerViewPlaylists
         playlistlist.layoutManager = GridLayoutManager(requireContext(), 2)
         playlistlist.adapter = adapter
@@ -46,11 +54,13 @@ class PlaylistsFragment : Fragment() {
         playlistsViewModel.observePlaylistState().observe(viewLifecycleOwner) {
             render(it)
         }
-
         placeholderImage = binding.phFragmentPlaylistsEmpty
         placeholderText = binding.nothingCreated
         binding.btNewPlaylist.setOnClickListener {
-            findNavController().navigate(R.id.action_mediaLibraryFragment_to_playlistFragment)
+            findNavController().navigate(
+                R.id.action_mediaLibraryFragment_to_newPlaylistFragment,
+                NewPlaylistFragment.createArgs(null)
+            )
         }
 
     }

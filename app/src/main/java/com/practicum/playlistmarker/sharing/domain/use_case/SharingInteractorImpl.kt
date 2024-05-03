@@ -21,12 +21,20 @@ class SharingInteractorImpl(
         externalNavigator.openEmail(getSupportEmailData())
     }
 
-    override fun getMessageAddedToPlaylist():String {
+    override fun getMessageAddedToPlaylist(): String {
         return resourceProvider.getMessageAddedToPlaylist()
     }
 
-    override fun getMessageAddedToPlaylistYet():String {
+    override fun getMessageAddedToPlaylistYet(): String {
         return resourceProvider.getMessageAddedToPlaylistYet()
+    }
+
+    override fun sharePlaylist(message: String) {
+        externalNavigator.shareLink(message)
+    }
+
+    override fun getPluralsTrack(counterTracks: Int): String {
+        return resourceProvider.getPluralsTrack(counterTracks)
     }
 
     private fun getShareAppLink(): String {

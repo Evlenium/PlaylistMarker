@@ -8,4 +8,7 @@ interface SharingInteractor {
     fun getMessageAddedToPlaylist(): String
 
     fun getMessageAddedToPlaylistYet(): String
+    fun sharePlaylist(message: String)
+
+    fun getPluralsTrack(counterTracks: Int): String
 }

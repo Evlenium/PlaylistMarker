@@ -7,7 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmarker.R
 import com.practicum.playlistmarker.media_library.domain.model.playlist.Playlist
 
-class PlaylistAdapter(private var playlists: List<Playlist>, val context: Context) :
+class PlaylistAdapter(
+    private var playlists: List<Playlist>,
+    val context: Context,
+    private val clickListener: PlaylistClickListener?,
+) :
     RecyclerView.Adapter<PlaylistViewHolder>() {
 
     fun setUpPlaylists(data: List<Playlist>) {
@@ -26,7 +30,14 @@ class PlaylistAdapter(private var playlists: List<Playlist>, val context: Contex
     }
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
+        val item = playlists[position]
         holder.bind(playlists[position], false, context)
+        holder.itemView.setOnClickListener {
+            clickListener?.onPlaylistClick(item)
+        }
     }
 
+    fun interface PlaylistClickListener {
+        fun onPlaylistClick(playlist: Playlist)
+    }
 }

@@ -5,7 +5,7 @@
     <attr name="text_button_main_menu_color" />
     <attr name="title_main_menu_color" />
     <attr name="button_main_menu_color" />
-    <attr name="icons_main_menu_color" />
+    <attr name="icon_back_color" />
 
     <!-- Base attributes settings. -->
     <attr name="background_settings_color" />
@@ -24,6 +24,7 @@
     <attr name="editor_search_color" />
     <attr name="composition_name_search_color" />
     <attr name="compositor_name_search_color" />
+    <attr name="button_clear_text_icon" />
 
     <!-- Base attributes audio player. -->
     <attr name="background_audio_player_color" />
@@ -58,7 +59,7 @@
         <item name="text_button_main_menu_color">@color/YPblack</item>
         <item name="title_main_menu_color">@color/YPwhite</item>
         <item name="button_main_menu_color">@color/YPwhite</item>
-        <item name="icons_main_menu_color">@color/YPblack</item>
+        <item name="icon_back_color">@color/YPblack</item>
         <!-- Settings menu. -->
         <item name="background_settings_color">@color/YPwhite</item>
         <item name="title_settings_color">@color/YPblack</item>
@@ -75,6 +76,7 @@
         <item name="editor_search_color">@color/YPlightgray</item>
         <item name="composition_name_search_color">@color/YPblack</item>
         <item name="compositor_name_search_color">@color/YPtextgray</item>
+        <item name="button_clear_text_icon">@color/YPtextgray</item>
         <!-- Base attributes audio player. -->
         <item name="background_audio_player_color">@color/YPwhite</item>
         <item name="text_audio_player_color">@color/YPblack</item>
@@ -144,18 +146,18 @@
 
     <!-- Base attributes Dialog PlaylistEntity. -->
     <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:textColorPrimary">?attr/text_media_color</item>
-        <item name="android:background">?attr/background_audio_player_color</item>
+        <item name="android:textColorPrimary">@color/YPblack</item>
+        <item name="android:background">@color/YPwhite</item>
         <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
     </style>
 
     <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">?attr/text_media_color</item>
+        <item name="android:textColor">@color/YPblue</item>
     </style>
 
     <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">?attr/text_media_color</item>
+        <item name="android:textColor">@color/YPblue</item>
     </style>
 
     <!-- Style to use for Snackbars in this theme. -->

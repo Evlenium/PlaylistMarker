@@ -48,6 +48,10 @@ class TracksRepositoryImpl(
                 }
             }
 
+            404 -> {
+                emit(Resource.Success(emptyList()))
+            }
+
             else -> {
                 emit(Resource.Error("Ошибка сервера"))
             }

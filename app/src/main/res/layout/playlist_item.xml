@@ -28,7 +28,7 @@
 
     <TextView
         android:id="@+id/name_playlist_item"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:fontFamily="@font/ys_display_regular"
@@ -37,6 +37,7 @@
         android:textColor="?attr/text_media_color"
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/counter_playlist_item"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Название" />
 

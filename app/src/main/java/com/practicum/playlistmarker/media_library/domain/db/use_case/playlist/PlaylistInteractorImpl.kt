@@ -17,7 +17,7 @@ class PlaylistInteractorImpl(private val playlistRepository: PlaylistRepository)
         playlistRepository.addPlaylist(playlistName, playlistDescription, uri)
     }
 
-    override fun deletePlaylist(playlist: Playlist) {
+    override suspend fun deletePlaylist(playlist: Playlist) {
         playlistRepository.deletePlaylist(playlist)
     }
 
@@ -26,7 +26,23 @@ class PlaylistInteractorImpl(private val playlistRepository: PlaylistRepository)
             .map { playlists: List<Playlist> -> playlists.reversed() }
     }
 
-    override suspend fun updatePlaylist(playlist: Playlist, track: Track) {
-        playlistRepository.updatePlaylist(playlist, track)
+    override suspend fun addTrackToPlaylist(playlist: Playlist, track: Track) {
+        playlistRepository.addTrackToPlaylist(playlist, track)
+    }
+
+    override suspend fun getPlaylistById(playlistId: Int): Playlist {
+        return playlistRepository.getPlaylistById(playlistId)
+    }
+
+    override suspend fun getTracksInPlaylist(tracksId: List<String>): Flow<List<Track>> {
+        return playlistRepository.getTracksInPlaylist(tracksId)
+    }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        playlistRepository.updatePlaylist(playlist)
+    }
+
+    override suspend fun deleteTrackFromPlaylist(trackId: String, playlist: Playlist) {
+        playlistRepository.deleteTrackFromPlaylist(trackId, playlist)
     }
 }

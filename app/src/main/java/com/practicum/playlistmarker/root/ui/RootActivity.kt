@@ -32,6 +32,10 @@ class RootActivity : AppCompatActivity() {
                     binding.bottomNavigationView.isVisible = false
                 }
 
+                R.id.newPlaylistFragment -> {
+                    binding.bottomNavigationView.isVisible = false
+                }
+
                 R.id.playlistFragment -> {
                     binding.bottomNavigationView.isVisible = false
                 }
