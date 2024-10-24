@@ -5,6 +5,7 @@ import com.practicum.playlistmarker.media_library.presentation.MediaLibraryViewM
 import com.practicum.playlistmarker.new_playlist.presentation.NewPlaylistViewModel
 import com.practicum.playlistmarker.media_library.presentation.PlaylistsViewModel
 import com.practicum.playlistmarker.player.presentation.AudioPlayerViewModel
+import com.practicum.playlistmarker.playlist.presentation.PlaylistViewModel
 import com.practicum.playlistmarker.search.presentation.TracksSearchViewModel
 import com.practicum.playlistmarker.settings.presentation.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -17,7 +18,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        AudioPlayerViewModel(get(), get(), get(),get())
+        AudioPlayerViewModel(get(), get(), get(), get())
     }
 
     viewModel {
@@ -38,5 +39,9 @@ val viewModelModule = module {
 
     viewModel {
         NewPlaylistViewModel(get())
+    }
+
+    viewModel {
+        PlaylistViewModel(get(), get())
     }
 }

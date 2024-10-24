@@ -8,13 +8,13 @@
     android:orientation="vertical"
     tools:context=".media_library.ui.MediaLibraryFragment">
 
-    <Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarMediaLibrary"
-        style="@style/TextToolbar"
+        style="@style/BackToolbarButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:collapseIcon="@drawable/bt_arrow_back_mode"
-        android:title="@string/media" />
+        app:title="@string/media"
+        app:titleTextAppearance="@style/ToolbarTextView" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tl_media_library"

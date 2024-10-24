@@ -9,11 +9,13 @@
     android:visibility="visible"
     tools:context=".search.ui.SearchFragment">
 
-    <Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/tbSearchActivity"
-        style="@style/TextToolbar"
-        android:collapseIcon="@drawable/bt_arrow_back_mode"
-        android:title="@string/search" />
+        style="@style/BackToolbarButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/search"
+        app:titleTextAppearance="@style/ToolbarTextView" />
 
     <FrameLayout
         android:layout_width="match_parent"

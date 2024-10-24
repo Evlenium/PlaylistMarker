@@ -30,10 +30,7 @@ class MediaLibraryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.toolbarMediaLibrary.setTitleTextAppearance(
-            requireContext(),
-            R.style.SecondsActivityMediumTextAppearance
-        )
+
         binding.viewPagerMediaLibrary.adapter = FavoritesTracklistsViewPagerAdapter(
             childFragmentManager,
             lifecycle

@@ -25,8 +25,14 @@ class FavoriteRepositoryImpl(
         emit(convertFromTrackEntity(tracks))
     }
 
+    override suspend fun getFavoriteTrackList(): List<String> {
+        return appDatabase.trackDao().getTracksId()
+    }
+
     private fun convertFromTrackEntity(tracks: List<TrackEntity>): List<Track> {
-        return tracks.map { track -> trackDbConvertor.map(track) }
+        val trackList = tracks.map { track -> trackDbConvertor.map(track) }
+        trackList.forEach { track: Track -> track.isFavorite = true }
+        return trackList
     }
 
     private fun convertFromTrack(track: Track): TrackEntity {

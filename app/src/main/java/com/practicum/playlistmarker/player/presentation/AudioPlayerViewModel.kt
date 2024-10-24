@@ -23,13 +23,13 @@ class AudioPlayerViewModel(
     private val playerInteractor: PlayerInteractor,
     private val favoriteInteractor: FavoriteInteractor,
     private val playlistInteractor: PlaylistInteractor,
-    private val sharingInteractor: SharingInteractor
+    private val sharingInteractor: SharingInteractor,
 ) :
     ViewModel() {
     var playerState = StatesPlayer.STATE_DEFAULT
     private val stateFavoriteLiveData = MutableLiveData<StateFavorite>()
     private val playlistStateLiveData = MutableLiveData<List<Playlist>>()
-    val trackInPlaylistStateLiveData = MutableLiveData<TrackPlaylistState>()
+    private val trackInPlaylistStateLiveData = MutableLiveData<TrackPlaylistState>()
 
     private lateinit var url: String
     private var timerJob: Job? = null
@@ -66,13 +66,23 @@ class AudioPlayerViewModel(
     }
 
     fun addTrackToPlaylist(playlist: Playlist, track: Track) {
-        trackInPlaylistStateLiveData.postValue(TrackPlaylistState.NotInPlaylist(playlist.playlistName,sharingInteractor.getMessageAddedToPlaylist()))
+        trackInPlaylistStateLiveData.postValue(
+            TrackPlaylistState.NotInPlaylist(
+                playlist.playlistName,
+                sharingInteractor.getMessageAddedToPlaylist()
+            )
+        )
         if (playlist.trackIdList.isEmpty()) {
             addToPlaylist(playlist, track)
         } else {
             playlist.trackIdList.forEach { trackIdIntList ->
-                if (track.trackId == trackIdIntList.toString()) {
-                    trackInPlaylistStateLiveData.postValue(TrackPlaylistState.InPlaylist(playlist.playlistName,sharingInteractor.getMessageAddedToPlaylistYet()))
+                if (track.trackId == trackIdIntList) {
+                    trackInPlaylistStateLiveData.postValue(
+                        TrackPlaylistState.InPlaylist(
+                            playlist.playlistName,
+                            sharingInteractor.getMessageAddedToPlaylistYet()
+                        )
+                    )
                     return
                 }
             }
@@ -82,15 +92,14 @@ class AudioPlayerViewModel(
 
     private fun addToPlaylist(playlist: Playlist, track: Track) {
         viewModelScope.launch {
-            playlist.trackIdList = playlist.trackIdList + track.trackId
-            playlist.counterTracks = playlist.counterTracks.plus(1)
-            playlistInteractor.updatePlaylist(playlist, track)
+            playlistInteractor.addTrackToPlaylist(playlist, track)
         }
     }
 
 
     fun preparePlayer(track: TrackSearchItem.Track?) {
         if (track != null) {
+            playerInteractor.reset()
             if (track.previewUrl != null) {
                 url = track.previewUrl
                 val trackItem = PlayerMapper.mapToTrackForPlayer(track)

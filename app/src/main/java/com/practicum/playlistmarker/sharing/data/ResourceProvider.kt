@@ -28,4 +28,12 @@ class ResourceProvider(val context: Context) {
     fun getMessageAddedToPlaylistYet(): String {
         return context.getString(R.string.added_to_playlist_yet)
     }
+
+    fun getPluralsTrack(counterTracks: Int): String {
+        return context.resources.getQuantityString(
+            R.plurals.plurals_track,
+            counterTracks,
+            counterTracks
+        )
+    }
 }
