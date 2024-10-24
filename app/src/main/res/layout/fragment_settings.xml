@@ -8,11 +8,13 @@
     android:orientation="vertical"
     tools:context=".settings.ui.SettingsFragment">
 
-    <Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarSettings"
-        style="@style/TextToolbar"
-        android:collapseIcon="@drawable/bt_arrow_back_mode"
-        android:title="@string/settings"/>
+        style="@style/BackToolbarButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/settings"
+        app:titleTextAppearance="@style/ToolbarTextView" />
 
     <LinearLayout
         android:layout_width="match_parent"

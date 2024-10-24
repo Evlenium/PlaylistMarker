@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmarker.R
 import com.practicum.playlistmarker.databinding.FragmentNewPlaylistBinding
 import com.practicum.playlistmarker.media_library.domain.model.playlist.Playlist
@@ -82,15 +81,8 @@ open class NewPlaylistFragment : Fragment() {
             )
         }
 
-        binding.toolbarPlaylist.apply {
-            setNavigationIcon(R.drawable.bt_arrow_back_mode)
-            setNavigationOnClickListener {
-                backPressed()
-            }
-            setTitleTextAppearance(
-                requireContext(),
-                R.style.SecondsActivityMediumTextAppearance
-            )
+        binding.toolbarPlaylist.setNavigationOnClickListener {
+            backPressed()
         }
 
         binding.apply {

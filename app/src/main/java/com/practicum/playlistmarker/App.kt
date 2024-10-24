@@ -19,7 +19,7 @@ class App : Application() {
         instance = this
         val sharedPreferences =
             getSharedPreferences(EDIT_THEME, MODE_PRIVATE)
-        (applicationContext as App).switchTheme(
+        instance.switchTheme(
             sharedPreferences.getBoolean(
                 EDIT_THEME,
                 (applicationContext as App).darkTheme

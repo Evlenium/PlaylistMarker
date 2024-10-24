@@ -76,10 +76,6 @@ class SearchFragment : Fragment() {
             progressBarSearch = binding.pbSearch
             recyclerViewTrack = binding.rvTracks
             trackAdapter = TrackAdapter(mutableListOf())
-            tbSearchActivity.setTitleTextAppearance(
-                requireContext(),
-                R.style.SecondsActivityMediumTextAppearance
-            )
         }
 
         var isClickAllowed = true

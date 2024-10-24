@@ -3,7 +3,6 @@ package com.practicum.playlistmarker.playlist.ui
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,12 +68,7 @@ class PlaylistFragment : Fragment() {
         val screenHeight = resources.displayMetrics.heightPixels
         binding.apply {
             toolbarPlaylist.apply {
-                setNavigationIcon(R.drawable.arrow_back_mode_black)
                 setNavigationOnClickListener { findNavController().popBackStack() }
-                setTitleTextAppearance(
-                    requireContext(),
-                    R.style.SecondsActivityMediumTextAppearance
-                )
             }
             imageButtonShare.setOnClickListener {
                 sharePlaylist()

@@ -7,14 +7,17 @@
     android:background="?attr/background_audio_player_color"
     tools:context=".new_playlist.ui.NewPlaylistFragment">
 
-    <Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarPlaylist"
-        style="@style/TextToolbar"
-        android:collapseIcon="@drawable/bt_arrow_back_mode"
-        android:title="@string/new_playlist"
+        style="@style/BackToolbarButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/bt_arrow_back_mode"
+        app:title="@string/new_playlist"
+        app:titleTextAppearance="@style/ToolbarTextView" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_playlist"

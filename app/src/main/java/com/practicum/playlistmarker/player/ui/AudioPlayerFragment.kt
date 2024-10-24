@@ -67,12 +67,7 @@ class AudioPlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.toolbarAudioPlayer.apply {
-            setNavigationIcon(R.drawable.bt_arrow_back_mode)
             setNavigationOnClickListener { findNavController().popBackStack() }
-            setTitleTextAppearance(
-                requireContext(),
-                R.style.SecondsActivityMediumTextAppearance
-            )
         }
         val bottomSheetContainer = binding.playlistBottomSheet
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {

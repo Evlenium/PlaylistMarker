@@ -12,13 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbarAudioPlayer"
-            style="@style/TextToolbar"
-            android:collapseIcon="@drawable/bt_arrow_back_mode"
+            style="@style/BackToolbarButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/bt_arrow_back_mode"
+            app:titleTextAppearance="@style/ToolbarTextView" />
 
 
         <ImageView
